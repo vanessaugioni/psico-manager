@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import capa from "../assets/capa.jpeg";
 
 export default function Login() {
   const [user, setUser] = useState("");
@@ -8,8 +9,7 @@ export default function Login() {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    // Exemplo de login simples
-    if(user === "admin" && password === "123") {
+    if (user === "admin" && password === "123") {
       localStorage.setItem("user", user);
       navigate("/dashboard");
     } else {
@@ -18,24 +18,61 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <form onSubmit={handleLogin} className="bg-white p-8 rounded shadow-md w-80">
-        <h2 className="text-2xl font-bold mb-6">Login</h2>
-        <input
-          className="w-full mb-4 p-2 border rounded"
-          placeholder="Usuário"
-          value={user}
-          onChange={(e) => setUser(e.target.value)}
-        />
-        <input
-          className="w-full mb-4 p-2 border rounded"
-          type="password"
-          placeholder="Senha"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button className="w-full bg-blue-600 text-white p-2 rounded font-bold">Entrar</button>
-      </form>
+    <div className="min-h-screen flex flex-col md:flex-row bg-white text-gray-800">
+      <div
+        className="hidden md:flex md:w-1/2 bg-cover bg-center relative"
+       style={{
+          backgroundImage: `url(${capa})`,
+        }}
+      >
+        <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+        </div>
+      </div>
+
+  
+      <div className="flex w-full md:w-1/2 items-center justify-center px-6 py-12">
+        <form
+          onSubmit={handleLogin}
+          className="w-full max-w-sm space-y-8"
+        >
+          <div className="text-center">
+            <h2 className="text-3xl font-bold mb-2">PsicoManager</h2>
+            <p className="text-gray-500 text-sm">
+              Acesse sua conta para continuar
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            <input
+              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9F6C4D] transition"
+              placeholder="Usuário"
+              value={user}
+              onChange={(e) => setUser(e.target.value)}
+            />
+
+            <input
+              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9F6C4D] transition"
+              type="password"
+              placeholder="Senha"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+
+          <button
+            className="w-full bg-[#9F6C4D] hover:bg-[#8b5f44] text-white p-3 rounded-lg font-medium transition-colors shadow-sm"
+          >
+            Entrar
+          </button>
+
+          <p className="text-center text-sm text-gray-500">
+            Esqueceu sua senha?{" "}
+            <a href="#" className="text-[#9F6C4D] hover:underline">
+              Recuperar acesso
+            </a>
+          </p>
+        </form>
+      </div>
     </div>
   );
 }
