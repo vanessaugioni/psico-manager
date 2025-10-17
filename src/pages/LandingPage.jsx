@@ -96,7 +96,6 @@ export default function LandingPage() {
         </p>
       </section>
 
-
       <section id="consultas" className="px-6 py-12 text-white text-center">
         <h3 className="text-2xl md:text-3xl font-bold mb-4">Consultas</h3>
         <p className="max-w-3xl mx-auto text-base md:text-lg text-gray-100 mb-6">
@@ -111,6 +110,14 @@ export default function LandingPage() {
         </Link>
       </section>
 
+       <section id="contato" className="px-6 py-12 text-white text-center">
+        <h3 className="text-2xl md:text-3xl font-bold mb-4">Contato e Parcerias</h3>
+        <p className="max-w-3xl mx-auto text-base md:text-lg text-gray-100">
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
+          incididunt ut labore et dolore magna aliqua.
+        </p>
+      </section>
+
      
       <section id="feedbacks" className="px-6 py-12 text-white text-center">
         <h3 className="text-2xl md:text-3xl font-bold mb-8">Feedbacks</h3>
@@ -123,13 +130,6 @@ export default function LandingPage() {
             ))}
           </Slider>
         </div>
-      </section>
-
- 
-      <section className="text-center py-6">
-        <p className="text-sm md:text-base font-light text-gray-200">
-          Luana Feliciano — Psicóloga Clínica • CRP 12/13402
-        </p>
       </section>
 
       <footer className="text-center text-sm text-gray-200 py-4 border-t border-gray-300/20 bg-[#8C5F44] w-full">

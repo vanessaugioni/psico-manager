@@ -54,12 +54,11 @@ export default function Sidebar() {
               <img
                 src={userPhoto}
                 alt="Usuário"
-                className="w-12 h-12 rounded-full object-cover border-2 border-[#9F6C4D]"
+                className="w-12 h-12 rounded-md object-cover border-2 border-[#9F6C4D]"
               />
             </div>
           )}
 
-          {/* Botão abrir/fechar */}
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="p-2 rounded hover:bg-gray-100 transition-colors mt-2"
@@ -68,7 +67,7 @@ export default function Sidebar() {
           </button>
         </div>
 
-        {/* Menu */}
+    
         <nav className="flex flex-col gap-2 mt-4 px-2">
           {menuItems.map((item) => {
             const isActive = location.pathname === item.path;
@@ -90,7 +89,7 @@ export default function Sidebar() {
         </nav>
       </div>
 
-      {/* Sign Out */}
+     
       <div className="p-4">
         <Link
           to="/login"
