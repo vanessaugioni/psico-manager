@@ -10,7 +10,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-import userPhoto from "../assets/userPhoto.png"; // ajuste a extensão correta
+import userPhoto from "../assets/userPhoto.png";
 
 export default function Sidebar() {
   const location = useLocation();
@@ -25,81 +25,80 @@ export default function Sidebar() {
   ];
 
   return (
-    <div
+    <aside
       className={`${
         isOpen ? "w-64" : "w-20"
-      } bg-white text-[#2A2343] min-h-screen flex flex-col justify-between shadow-md transition-all duration-300`}
+      } bg-white border-r border-gray-100 text-gray-800 min-h-screen flex flex-col justify-between transition-all duration-200 ease-in-out`}
     >
-      {/* Cabeçalho */}
+      {/* TOPO */}
       <div>
+        {/* Cabeçalho / Usuário */}
         <div
-          className={`flex items-center justify-between px-4 py-4 ${
-            !isOpen && "flex-col justify-center"
+          className={`flex items-center justify-between px-4 py-5 border-b border-gray-100 ${
+            !isOpen ? "flex-col gap-3 justify-center" : ""
           }`}
         >
-          {isOpen ? (
-            <div className="flex items-center gap-3">
-              <img
-                src={userPhoto}
-                alt="Usuário"
-                className="w-12 h-12 rounded-md object-cover"
-              />
+          <div className="flex items-center gap-3 justify-center w-full">
+            <img
+              src={userPhoto}
+              alt="Usuário"
+              className={`w-12 h-12 rounded-lg object-cover shadow-md transition-all duration-200`}
+            />
+            {isOpen && (
               <div className="flex flex-col">
-                <h2 className="font-semibold text-lg text-[#2A2343]">Luana Feliciano</h2>
-                <span className="text-sm text-gray-500">Psicóloga</span>
+                <h2 className="font-semibold text-gray-800 text-sm">
+                  Luana Feliciano
+                </h2>
+                <span className="text-xs text-gray-500">Psicóloga</span>
               </div>
-            </div>
-          ) : (
-            <div className="flex justify-center w-full py-4">
-              <img
-                src={userPhoto}
-                alt="Usuário"
-                className="w-12 h-12 rounded-md object-cover border-2 border-[#9F6C4D]"
-              />
-            </div>
-          )}
+            )}
+          </div>
 
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="p-2 rounded hover:bg-gray-100 transition-colors mt-2"
+            className="p-2 rounded-md hover:bg-gray-100 transition-colors"
           >
-            {isOpen ? <ChevronLeft size={20} /> : <ChevronRight size={20} />}
+            {isOpen ? (
+              <ChevronLeft size={18} className="text-gray-500" />
+            ) : (
+              <ChevronRight size={18} className="text-gray-500" />
+            )}
           </button>
         </div>
 
-    
-        <nav className="flex flex-col gap-2 mt-4 px-2">
+        {/* Navegação */}
+        <nav className="flex flex-col gap-1 mt-4 px-2">
           {menuItems.map((item) => {
             const isActive = location.pathname === item.path;
             return (
               <Link
                 key={item.name}
                 to={item.path}
-                className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-300 ${
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-md transition-all duration-200 ease-in-out ${
                   isActive
-                    ? "bg-[#9F6C4D] text-white font-medium shadow"
-                    : "text-[#2A2343] hover:bg-[#F5F2F7] hover:text-[#9F6C4D] font-normal"
+                    ? "bg-[#4D7CFC]/10 text-[#4D7CFC] font-medium"
+                    : "text-gray-600 hover:bg-gray-50 hover:text-[#4D7CFC]"
                 } ${isOpen ? "justify-start" : "justify-center"}`}
               >
                 {item.icon}
-                {isOpen && <span>{item.name}</span>}
+                {isOpen && <span className="text-sm tracking-wide">{item.name}</span>}
               </Link>
             );
           })}
         </nav>
       </div>
 
-     
-      <div className="p-4">
+      {/* Rodapé */}
+      <div className="p-4 border-t border-gray-100">
         <Link
           to="/login"
           onClick={() => localStorage.removeItem("user")}
-          className="flex items-center gap-2 bg-[#9F6C4D] text-white py-2 rounded-lg font-medium shadow hover:bg-[#8C5F44] transition-colors duration-300 justify-center"
+          className="flex items-center gap-2 justify-center bg-[#4D7CFC] text-white text-sm font-medium px-3 py-2.5 rounded-md shadow-sm hover:bg-[#3c6ae0] transition-colors duration-200"
         >
-          <LogOut size={18} />
-          {isOpen && <span>Sign Out</span>}
+          <LogOut size={16} />
+          {isOpen && <span>Sair</span>}
         </Link>
       </div>
-    </div>
+    </aside>
   );
 }

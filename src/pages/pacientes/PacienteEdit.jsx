@@ -7,11 +7,9 @@ export default function PacienteEdit() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  // Aqui normalmente você buscaria os dados do paciente via API
   const [paciente, setPaciente] = useState(null);
 
   useEffect(() => {
-    // Simulando fetch
     const pacientesMock = [
       { id: "1", fullName: "Ana Clara Souza", email: "ana.souza@email.com", phone: "(11) 91234-5678", birthDate: "1990-03-15" },
       { id: "2", fullName: "Bruno Lima", email: "bruno.lima@email.com", phone: "(21) 99876-5432", birthDate: "1985-07-22" },
