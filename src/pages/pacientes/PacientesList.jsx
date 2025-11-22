@@ -1,69 +1,67 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../../components/Sidebar";
-import { Edit, Plus, Search, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { Edit, Plus, Search, X, ChevronLeft, ChevronRight, User } from "lucide-react";
+import { supabase } from "../../lib/supabaseClient";
 
 export default function PacienteList() {
   const navigate = useNavigate();
 
-  const [pacientes, setPacientes] = useState([
-    {
-      id: 1,
-      fullName: "Ana Clara Souza",
-      email: "ana.souza@email.com",
-      phone: "123-456-7890",
-      birthDate: "2021-03-19",
-      grupo: "Grupo A",
-    },
-    {
-      id: 2,
-      fullName: "Bruno Lima",
-      email: "bruno.lima@email.com",
-      phone: "123-456-7890",
-      birthDate: "2021-03-19",
-      grupo: "Grupo A",
-    },
-    {
-      id: 3,
-      fullName: "Carla Fernandes",
-      email: "carla.fernandes@email.com",
-      phone: "123-456-7890",
-      birthDate: "2021-03-19",
-      grupo: "Grupo B",
-    },
-    {
-      id: 4,
-      fullName: "Daniel Rocha",
-      email: "daniel.rocha@email.com",
-      phone: "123-456-7890",
-      birthDate: "2021-03-19",
-      grupo: "Grupo C",
-    },
-  ]);
-
+  const [pacientes, setPacientes] = useState([]);
   const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
+
+  // Buscar pacientes do Supabase
+  const fetchPacientes = async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from("pacientes")
+      .select("*")
+      .order("nome", { ascending: true });
+
+    if (error) {
+      console.error("Erro ao buscar pacientes:", error);
+    } else {
+      setPacientes(data);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchPacientes();
+  }, []);
 
   const filteredPacientes = pacientes.filter((p) =>
-    p.fullName.toLowerCase().includes(search.toLowerCase())
+    p.nome.toLowerCase().includes(search.toLowerCase())
   );
 
-  const getGrupoColor = (grupo) => {
-    switch (grupo) {
-      case "Grupo A":
-        return "bg-blue-50 text-blue-600";
-      case "Grupo B":
-        return "bg-green-50 text-green-600";
-      case "Grupo C":
-        return "bg-purple-50 text-purple-600";
-      default:
-        return "bg-gray-50 text-gray-600";
-    }
+  const totalPages = Math.ceil(filteredPacientes.length / itemsPerPage);
+  const paginatedPacientes = filteredPacientes.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const handlePrevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
+  const handleNextPage = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+
+  const calcularIdade = (dataNascimento) => {
+    if (!dataNascimento) return "-";
+    const today = new Date();
+    const birthDate = new Date(dataNascimento);
+    let idade = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) idade--;
+    return idade;
   };
 
   return (
     <div className="flex min-h-screen bg-[#f8f8f8]">
-      <Sidebar />
-      <div className="flex-1 p-8">
+      <aside className="flex-shrink-0">
+        <Sidebar />
+      </aside>
+      <main className="flex-1 p-8">
         <header className="mb-8">
           <h1 className="text-3xl font-bold text-gray-800 mb-1">Pacientes</h1>
           <p className="text-gray-500 text-sm">
@@ -71,9 +69,9 @@ export default function PacienteList() {
           </p>
         </header>
 
+        {/* Busca e Adicionar */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-3">
-          {/* Campo de busca ocupa todo o espaço */}
-          <div className="flex-1 relative shadow-sm rounded-md">
+          <div className="flex-1 relative shadow-sm rounded-lg">
             <Search
               className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
               size={18}
@@ -82,8 +80,12 @@ export default function PacienteList() {
               type="text"
               placeholder="Buscar paciente..."
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-9 py-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-[#4D7CFC]/30 text-sm bg-white"
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setCurrentPage(1); // resetar paginação ao buscar
+              }}
+              className="w-full pl-9 pr-9 py-2 border border-gray-200 rounded-lg 
+              focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40 text-sm bg-white"
             />
             {search && (
               <button
@@ -97,72 +99,84 @@ export default function PacienteList() {
 
           <button
             onClick={() => navigate("/pacientesForm")}
-            className="flex items-center justify-center gap-2 bg-[#4D7CFC] text-white px-4 py-2 rounded-md hover:bg-[#3c6ae0] transition text-sm font-medium shadow-sm whitespace-nowrap"
+            className="flex items-center justify-center gap-2 bg-[#9F6C4D] text-white px-4 py-2 
+            rounded-lg hover:bg-[#875B3F] transition text-sm font-medium shadow-sm whitespace-nowrap"
           >
             <Plus size={16} />
             Adicionar
           </button>
         </div>
 
-        <div className="bg-white rounded-lg overflow-hidden shadow-md">
-          <table className="w-full text-sm text-left text-gray-700 border-collapse">
+
+        <div className="bg-white rounded-xl shadow-md border border-gray-200 overflow-x-auto min-h-[360px]">
+          <table className="w-full text-sm text-left text-gray-700 min-w-[750px]">
             <thead className="bg-white text-gray-600 text-xs uppercase border-b border-gray-100">
               <tr>
                 <th className="px-4 py-3 w-6">
-                  <input type="checkbox" className="accent-gray-500" />
+                  <input type="checkbox" className="accent-[#9F6C4D]" />
                 </th>
+                <th className="px-4 py-3 font-semibold">Foto</th>
                 <th className="px-4 py-3 font-semibold">Nome</th>
-                <th className="px-4 py-3 font-semibold">Email</th>
                 <th className="px-4 py-3 font-semibold">Celular</th>
-                <th className="px-4 py-3 font-semibold">Data registro</th>
-                <th className="px-4 py-3 font-semibold">Grupo</th>
+                <th className="px-4 py-3 font-semibold">Idade</th>
                 <th className="px-4 py-3 font-semibold text-right">Ações</th>
               </tr>
             </thead>
             <tbody>
-              {filteredPacientes.length > 0 ? (
-                filteredPacientes.map((p) => (
-                  <tr
-                    key={p.id}
-                    className="bg-white hover:bg-[#F7F8FF]/70 transition-colors"
-                  >
-                    <td className="px-4 py-3">
-                      <input type="checkbox" className="accent-gray-500" />
-                    </td>
-                    <td className="px-4 py-3 font-medium text-gray-700 hover:text-gray-900 transition">
-                      {p.fullName}
-                    </td>
-                    <td className="px-4 py-3">{p.email}</td>
-                    <td className="px-4 py-3">{p.phone}</td>
-                    <td className="px-4 py-3">{p.birthDate}</td>
-                    <td className="px-4 py-3">
-                      <span
-                        className={`px-2.5 py-1 rounded-full text-xs font-medium ${getGrupoColor(
-                          p.grupo
-                        )}`}
-                      >
-                        {p.grupo}
-                      </span>
-                    </td>
-                    <td className="px-4 py-3 text-right">
-                      <button
-                        onClick={() => navigate(`/pacientes/PacienteEdit${p.id}`)}
-                        className="p-2 rounded-md hover:bg-gray-100 focus:ring-2 focus:ring-gray-200 transition"
-                      >
-                        <Edit
-                          size={17}
-                          className="text-gray-600 hover:text-gray-800 transition"
-                        />
-                      </button>
-                    </td>
-                  </tr>
-                ))
+              {loading ? (
+                <tr>
+                  <td colSpan="6" className="text-center py-6 text-gray-500">
+                    Carregando pacientes...
+                  </td>
+                </tr>
+              ) : paginatedPacientes.length > 0 ? (
+                <>
+                  {paginatedPacientes.map((p) => (
+                    <tr
+                      key={p.id}
+                      className="bg-white hover:bg-[#F6F1ED] transition-colors"
+                    >
+                      <td className="px-4 py-3">
+                        <input type="checkbox" className="accent-[#9F6C4D]" />
+                      </td>
+                      <td className="px-4 py-3">
+                        {p.foto ? (
+                          <img
+                            src={p.foto}
+                            alt={p.nome}
+                            className="h-10 w-10 rounded-full object-cover border border-gray-200"
+                          />
+                        ) : (
+                          <div className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
+                            <User size={16} className="text-gray-400" />
+                          </div>
+                        )}
+                      </td>
+                      <td className="px-4 py-3 font-medium text-gray-800">{p.nome}</td>
+                      <td className="px-4 py-3">{p.telefone}</td>
+                      <td className="px-4 py-3">{calcularIdade(p.data_nascimento)}</td>
+                      <td className="px-4 py-3 text-right">
+                        <button
+                          onClick={() => navigate(`/pacientes/edit/${p.id_paciente}`)}
+                          className="p-2 rounded-md hover:bg-gray-100 transition"
+                        >
+                          <Edit size={17} className="text-gray-600" />
+                        </button>
+
+                      </td>
+                    </tr>
+                  ))}
+
+                  {paginatedPacientes.length < itemsPerPage &&
+                    Array.from({ length: itemsPerPage - paginatedPacientes.length }).map((_, i) => (
+                      <tr key={`empty-${i}`} className="h-12">
+                        <td colSpan="6"></td>
+                      </tr>
+                    ))}
+                </>
               ) : (
                 <tr>
-                  <td
-                    colSpan="7"
-                    className="text-center py-6 text-gray-500 italic"
-                  >
+                  <td colSpan="6" className="text-center py-6 text-gray-500 italic">
                     Nenhum paciente encontrado.
                   </td>
                 </tr>
@@ -171,29 +185,26 @@ export default function PacienteList() {
           </table>
         </div>
 
-    
-        <div className="flex flex-col sm:flex-row justify-between items-center text-sm text-gray-600 mt-6 gap-3">
-          <div className="flex items-center gap-2 shadow-sm bg-white px-3 py-2 rounded-md">
-            <span className="text-gray-500">Itens por página:</span>
-            <select className="border-none rounded-md text-sm focus:ring-[#4D7CFC]/40 focus:outline-none bg-transparent">
-              <option>5</option>
-              <option>10</option>
-              <option>25</option>
-            </select>
-            <span className="text-gray-500">1/4 de 100</span>
-          </div>
-
-          <div className="flex items-center gap-1 bg-white px-3 py- rounded-md shadow-sm">
-            <button className="p-1 rounded-md hover:bg-gray-100 transition">
-              <ChevronLeft size={18} className="text-gray-500" />
-            </button>
-            <span className="text-gray-500">1 de 40</span>
-            <button className="p-1 rounded-md hover:bg-gray-100 transition">
-              <ChevronRight size={18} className="text-gray-500" />
-            </button>
-          </div>
+        <div className="flex justify-between items-center text-sm text-gray-600 mt-6 gap-3">
+          <button
+            onClick={handlePrevPage}
+            disabled={currentPage === 1}
+            className="flex items-center gap-1 bg-white px-3 py-2 rounded-lg shadow-sm border border-gray-200 disabled:opacity-50"
+          >
+            <ChevronLeft size={18} className="text-gray-600" /> Anterior
+          </button>
+          <span>
+            Página {currentPage} de {totalPages || 1}
+          </span>
+          <button
+            onClick={handleNextPage}
+            disabled={currentPage === totalPages || totalPages === 0}
+            className="flex items-center gap-1 bg-white px-3 py-2 rounded-lg shadow-sm border border-gray-200 disabled:opacity-50"
+          >
+            Próxima <ChevronRight size={18} className="text-gray-600" />
+          </button>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

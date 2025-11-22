@@ -15,40 +15,33 @@ export default function AppRoutes() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
 
-        <Route 
-          path="/dashboard" 
+        <Route
+          path="/dashboard"
           element={
             <PrivateRoute>
               <Dashboard />
             </PrivateRoute>
-          } 
+          }
         />
 
-        <Route 
-          path="/pacientes" 
+        <Route
+          path="/pacientes"
           element={
             <PrivateRoute>
               <Pacientes />
             </PrivateRoute>
-          } 
+          }
         />
 
-        <Route 
-          path="/pacientes/:id" 
-          element={
-            <PrivateRoute>
-              <PacienteEdit />
-            </PrivateRoute>
-          } 
-        />
+        <Route path="/pacientes/edit/:id" element={<PacienteEdit />} />
 
-        <Route 
-          path="/pacientesForm" 
+        <Route
+          path="/pacientesForm"
           element={
             <PrivateRoute>
               <PacienteForm />
             </PrivateRoute>
-          } 
+          }
         />
 
         <Route path="*" element={<NotFound />} />

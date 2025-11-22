@@ -30,7 +30,6 @@ export default function Sidebar() {
         isOpen ? "w-64" : "w-20"
       } bg-white border-r border-gray-100 text-gray-800 min-h-screen flex flex-col justify-between transition-all duration-200 ease-in-out`}
     >
-      {/* TOPO */}
       <div>
         {/* Cabeçalho / Usuário */}
         <div
@@ -76,8 +75,8 @@ export default function Sidebar() {
                 to={item.path}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-md transition-all duration-200 ease-in-out ${
                   isActive
-                    ? "bg-[#4D7CFC]/10 text-[#4D7CFC] font-medium"
-                    : "text-gray-600 hover:bg-gray-50 hover:text-[#4D7CFC]"
+                    ? "bg-[#9F6C4D]/10 text-[#9F6C4D] font-medium"
+                    : "text-gray-600 hover:bg-gray-50 hover:text-[#9F6C4D]"
                 } ${isOpen ? "justify-start" : "justify-center"}`}
               >
                 {item.icon}
@@ -93,7 +92,7 @@ export default function Sidebar() {
         <Link
           to="/login"
           onClick={() => localStorage.removeItem("user")}
-          className="flex items-center gap-2 justify-center bg-[#4D7CFC] text-white text-sm font-medium px-3 py-2.5 rounded-md shadow-sm hover:bg-[#3c6ae0] transition-colors duration-200"
+          className="flex items-center gap-2 justify-center bg-[#9F6C4D] text-white text-sm font-medium px-3 py-2.5 rounded-md shadow-sm hover:bg-[#8b5f44] transition-colors duration-200"
         >
           <LogOut size={16} />
           {isOpen && <span>Sair</span>}
@@ -102,3 +101,4 @@ export default function Sidebar() {
     </aside>
   );
 }
+``
