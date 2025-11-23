@@ -140,7 +140,7 @@ export default function PacienteEdit() {
     setObservation(data.observacao || "");
     setAddress(data.endereco || "");
     setNumber(data.numero || "");
-    setPhone(data.telefone || "");
+    setPhone(data.contato || "");
     setEmergencyContact(data.contato_emergencia || "");
     setEmail(data.email || "");
     setPhoto(data.foto || null);
@@ -174,87 +174,6 @@ export default function PacienteEdit() {
 
     return publicData?.publicUrl || null;
   };
-  //   e.preventDefault();
-
-  //   const newErrors = {};
-  //   const cleanCPF = (cpf) => {
-  //     if (!cpf) return "";
-  //     return cpf.replace(/\D/g, ""); 
-  //   };
-
-
-  //   if (!fullName.trim()) newErrors.fullName = "Nome obrigatório.";
-  //   if (!cpf.trim() || cpf.includes("_")) newErrors.cpf = "CPF obrigatório.";
-  //   if (!birthDate.trim()) newErrors.birthDate = "Data de nascimento obrigatória.";
-  //   if (!phone.trim()) newErrors.phone = "Celular obrigatório.";
-
-  //   if (email && !isValidEmail(email)) {
-  //     toast.error("Digite um email válido.");
-  //     return;
-  //   }
-
-  //   if (Object.keys(newErrors).length > 0) {
-  //     setErrors(newErrors);
-  //     toast.error("Preencha os campos obrigatórios.");
-  //     return;
-  //   }
-
-  //   setErrors({});
-
-  //   // const cpfExists = await checkCpfExists(cpf);
-
-  //   // if (cpfExists) {
-  //   //   toast.error("Este CPF já está cadastrado.");
-  //   //   setErrors((prev) => ({ ...prev, cpf: true }));
-  //   //   return;
-  //   // }
-
-  //   const genero_id = generoOptions.find((g) => g.name === gender)?.id || null;
-  //   const estado_civil_id = estadoCivilOptions.find((e) => e.name === maritalStatus)?.id || null;
-  //   const religiao_id = religiaoOptions.find((r) => r.name === religion)?.id || null;
-  //   const escolaridade_id = escolaridadeOptions.find((e) => e.name === education)?.id || null;
-  //   const orientacao_id = orientacaoOptions.find((o) => o.name === sexualOrientation)?.id || null;
-  //   const pais_id = paisOptions.find((p) => p.name === country)?.id || null;
-
-  //   let photoUrl = null;
-  //   if (photo) {
-  //     photoUrl = await uploadPhoto(photo);
-  //   }
-
-  //   const { data, error } = await supabase.from("pacientes").insert([
-  //     {
-  //       nome: fullName,
-  //       nome_social: socialName,
-  //       cpf: cleanCPF(cpf),
-  //       data_nascimento: birthDate,
-  //       idade: age,
-  //       genero_id,
-  //       orientacao_id,
-  //       estado_civil_id,
-  //       profissao: profession,
-  //       religiao_id,
-  //       escolaridade_id,
-  //       composicao_familiar: familyComposition,
-  //       endereco: address ? `${address}, ${number}` : null,
-  //       pais_id,
-  //       telefone: phone,
-  //       contato_emergencia: emergencyContact,
-  //       email,
-  //       medicacao: medication,
-  //       observacao: `${diseases ? `Doenças: ${diseases}\n` : ""}${observation}`,
-  //       foto: photoUrl,
-  //     },
-  //   ]);
-
-  //   if (error) {
-  //     console.log(error);
-  //     toast.error("Erro ao salvar paciente. Verifique os dados.");
-  //     return;
-  //   }
-
-  //   toast.success("Paciente salvo com sucesso!");
-  //   setTimeout(() => navigate("/pacientes"), 1500);
-  // };
 
 
   const isValidEmail = (email) =>
@@ -322,7 +241,7 @@ export default function PacienteEdit() {
         endereco: address,
         numero: number,
         pais_id,
-        telefone: phone,
+        contato: phone,
         contato_emergencia: emergencyContact,
         email,
         medicacao: medication,
@@ -639,7 +558,7 @@ export default function PacienteEdit() {
                 </select>
                 <IMaskInput
                   className={inputClass}
-                  mask="(00) 00000-0000"
+                  mask="+55 (00) 00000-0000"
                   placeholder="Celular *"
                   value={phone}
                   onAccept={(value) => setPhone(value)}
@@ -647,6 +566,7 @@ export default function PacienteEdit() {
                 <input
                   className={inputClass}
                   placeholder="Contato de Emergência"
+                  mask="+55 (00) 00000-0000"
                   value={emergencyContact}
                   onChange={(e) => setEmergencyContact(e.target.value)}
                 />

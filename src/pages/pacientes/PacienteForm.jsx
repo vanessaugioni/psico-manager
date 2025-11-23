@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../../components/Sidebar";
 import { ChevronDown, ChevronUp } from "lucide-react";
@@ -38,6 +38,39 @@ export default function PacienteForm() {
   const [emergencyContact, setEmergencyContact] = useState("");
   const [email, setEmail] = useState("");
 
+  const [generoOptions, setGeneroOptions] = useState([]);
+  const [orientacaoOptions, setOrientacaoOptions] = useState([]);
+  const [estadoCivilOptions, setEstadoCivilOptions] = useState([]);
+  const [religiaoOptions, setReligiaoOptions] = useState([]);
+  const [escolaridadeOptions, setEscolaridadeOptions] = useState([]);
+  const [paisOptions, setPaisOptions] = useState([]);
+
+
+  useEffect(() => {
+    const loadOptions = async () => {
+      const [{ data: generos }, { data: orientacoes }, { data: estadosCivis },
+        { data: religioes }, { data: escolaridades }, { data: paises }] =
+        await Promise.all([
+          supabase.from("generos").select("*"),
+          supabase.from("orientacoes").select("*"),
+          supabase.from("estados_civis").select("*"),
+          supabase.from("religioes").select("*"),
+          supabase.from("escolaridades").select("*"),
+          supabase.from("paises").select("*")
+        ]);
+
+      setGeneroOptions(generos || []);
+      setOrientacaoOptions(orientacoes || []);
+      setEstadoCivilOptions(estadosCivis || []);
+      setReligiaoOptions(religioes || []);
+      setEscolaridadeOptions(escolaridades || []);
+      setPaisOptions(paises || []);
+    };
+
+    loadOptions();
+  }, []);
+
+
   const [photo, setPhoto] = useState(null);
 
   const [openSections, setOpenSections] = useState({
@@ -51,46 +84,6 @@ export default function PacienteForm() {
     setOpenSections({ ...openSections, [section]: !openSections[section] });
   };
 
-  const generoOptions = [
-    { id: 1, name: "Masculino" },
-    { id: 2, name: "Feminino" },
-    { id: 3, name: "Outro" },
-  ];
-
-  const estadoCivilOptions = [
-    { id: 1, name: "Solteiro(a)" },
-    { id: 2, name: "Casado(a)" },
-    { id: 3, name: "Divorciado(a)" },
-    { id: 4, name: "Viúvo(a)" },
-  ];
-
-  const religiaoOptions = [
-    { id: 1, name: "Católica" },
-    { id: 2, name: "Evangélica" },
-    { id: 3, name: "Espírita" },
-    { id: 4, name: "Outras" },
-  ];
-
-  const escolaridadeOptions = [
-    { id: 1, name: "Fundamental" },
-    { id: 2, name: "Médio" },
-    { id: 3, name: "Superior" },
-    { id: 4, name: "Pós-graduação" },
-  ];
-
-  const orientacaoOptions = [
-    { id: 1, name: "Heterossexual" },
-    { id: 2, name: "Homossexual" },
-    { id: 3, name: "Bissexual" },
-    { id: 4, name: "Outro" },
-  ];
-
-  const paisOptions = [
-    { id: 1, name: "Brasil" },
-    { id: 2, name: "Argentina" },
-    { id: 3, name: "Estados Unidos" },
-  ];
-
   const calcularIdade = (data) => {
     if (!data) return null;
     const hoje = new Date();
@@ -103,10 +96,16 @@ export default function PacienteForm() {
     return idade;
   };
 
+
+
   const uploadPhoto = async (file) => {
     console.warn("📸 Enviando arquivo:", file);
 
     if (!file) return null;
+
+    const sanitizedName = file.name
+      .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // remove acentos
+      .replace(/[^a-zA-Z0-9.\-_]/g, "_"); // troca espaços e caracteres especiais
 
     const filePath = `fotos/${Date.now()}_${file.name}`;
     const { data, error } = await supabase.storage
@@ -140,7 +139,7 @@ export default function PacienteForm() {
 
     const { data, error } = await supabase
       .from("pacientes")
-      .select("id")
+      .select("id_paciente")
       .eq("cpf", clean)
       .maybeSingle();
 
@@ -156,7 +155,7 @@ export default function PacienteForm() {
   const isValidEmail = (email) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   };
-  
+
   const handleSaveID = async (e) => {
     e.preventDefault();
 
@@ -214,13 +213,15 @@ export default function PacienteForm() {
         religiao_id,
         escolaridade_id,
         composicao_familiar: familyComposition,
-        endereco: address ? `${address}, ${number}` : null,
+        endereco: address,
+        numero: number,
         pais_id,
-        telefone: phone,
+        contato: phone,
         contato_emergencia: emergencyContact,
         email,
         medicacao: medication,
-        observacao: `${diseases ? `Doenças: ${diseases}\n` : ""}${observation}`,
+        observacao: observation,
+        doencas: diseases,
         foto: photoUrl,
       },
     ]);
@@ -353,7 +354,7 @@ export default function PacienteForm() {
                     const idadeCalculada = calcularIdade(value);
                     setAge(idadeCalculada);
                   }}
-                  max={new Date().toISOString().split("T")[0]} 
+                  max={new Date().toISOString().split("T")[0]}
                   required
                 />
 
@@ -370,10 +371,10 @@ export default function PacienteForm() {
                   value={gender}
                   onChange={(e) => setGender(e.target.value)}
                 >
-                  <option value="">Selecione o Gênero </option>
+                  <option value="">Selecione o Gênero</option>
                   {generoOptions.map((g) => (
-                    <option key={g.id} value={g.name}>
-                      {g.name}
+                    <option key={g.id_genero} value={g.id_genero}>
+                      {g.descricao}
                     </option>
                   ))}
                 </select>
@@ -384,11 +385,12 @@ export default function PacienteForm() {
                 >
                   <option value="">Selecione a Orientação</option>
                   {orientacaoOptions.map((o) => (
-                    <option key={o.id} value={o.name}>
-                      {o.name}
+                    <option key={o.id_orientacao} value={o.id_orientacao}>
+                      {o.descricao}
                     </option>
                   ))}
                 </select>
+
                 <select
                   className={`${inputClass} appearance-none bg-white`}
                   value={maritalStatus}
@@ -396,11 +398,12 @@ export default function PacienteForm() {
                 >
                   <option value="">Selecione o Estado Civil</option>
                   {estadoCivilOptions.map((e) => (
-                    <option key={e.id} value={e.name}>
-                      {e.name}
+                    <option key={e.id_estado_civil} value={e.id_estado_civil}>
+                      {e.descricao}
                     </option>
                   ))}
                 </select>
+
               </div>
             </div>
           </div>
@@ -430,11 +433,12 @@ export default function PacienteForm() {
                   >
                     <option value="">Selecione a Religião</option>
                     {religiaoOptions.map((r) => (
-                      <option key={r.id} value={r.name}>
-                        {r.name}
+                      <option key={r.id_religiao} value={r.id_religiao}>
+                        {r.descricao}
                       </option>
                     ))}
                   </select>
+
                   <select
                     className={`${inputClass} appearance-none bg-white`}
                     value={education}
@@ -442,11 +446,12 @@ export default function PacienteForm() {
                   >
                     <option value="">Selecione a Escolaridade</option>
                     {escolaridadeOptions.map((e) => (
-                      <option key={e.id} value={e.name}>
-                        {e.name}
+                      <option key={e.id_escolaridade} value={e.id_escolaridade}>
+                        {e.descricao}
                       </option>
                     ))}
                   </select>
+
                 </div>
                 <textarea
                   className={textareaClass}
@@ -524,11 +529,12 @@ export default function PacienteForm() {
                 >
                   <option value="">Selecione o País</option>
                   {paisOptions.map((p) => (
-                    <option key={p.id} value={p.name}>
-                      {p.name}
+                    <option key={p.id_pais} value={p.id_pais}>
+                      {p.nome}
                     </option>
                   ))}
                 </select>
+
                 <IMaskInput
                   className={`${inputClass} ${errors?.phone ? "border-red-500" : ""}`}
                   placeholder="Celular *"

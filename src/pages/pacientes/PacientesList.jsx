@@ -153,7 +153,7 @@ export default function PacienteList() {
                         )}
                       </td>
                       <td className="px-4 py-3 font-medium text-gray-800">{p.nome}</td>
-                      <td className="px-4 py-3">{p.telefone}</td>
+                      <td className="px-4 py-3">{p.contato}</td>
                       <td className="px-4 py-3">{calcularIdade(p.data_nascimento)}</td>
                       <td className="px-4 py-3 text-right">
                         <button
