@@ -13,7 +13,6 @@ export default function PacienteList() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
 
-  // Buscar pacientes do Supabase
   const fetchPacientes = async () => {
     setLoading(true);
     const { data, error } = await supabase
@@ -98,7 +97,7 @@ export default function PacienteList() {
           </div>
 
           <button
-            onClick={() => navigate("/pacientesForm")}
+            onClick={() => navigate("/pacienteForm")}
             className="flex items-center justify-center gap-2 bg-[#9F6C4D] text-white px-4 py-2 
             rounded-lg hover:bg-[#875B3F] transition text-sm font-medium shadow-sm whitespace-nowrap"
           >
@@ -157,7 +156,7 @@ export default function PacienteList() {
                       <td className="px-4 py-3">{calcularIdade(p.data_nascimento)}</td>
                       <td className="px-4 py-3 text-right">
                         <button
-                          onClick={() => navigate(`/pacientes/edit/${p.id_paciente}`)}
+                          onClick={() => navigate(`/paciente/edit/${p.id_paciente}`)}
                           className="p-2 rounded-md hover:bg-gray-100 transition"
                         >
                           <Edit size={17} className="text-gray-600" />
