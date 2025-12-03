@@ -1,164 +1,165 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../../components/Sidebar";
-import { Edit, Plus, Search, X, ChevronLeft, ChevronRight, User } from "lucide-react";
 import { supabase } from "../../lib/supabaseClient";
+
+import FullCalendar from "@fullcalendar/react";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import timeGridPlugin from "@fullcalendar/timegrid";
+import interactionPlugin from "@fullcalendar/interaction";
+
+// ⚠️ FullCalendar v6 NÃO usa mais CSS externo
+import "@fullcalendar/daygrid";
+import "@fullcalendar/timegrid";
 
 export default function ConsultasList() {
     const navigate = useNavigate();
-
     const [consultas, setConsultas] = useState([]);
     const [pacientes, setPacientes] = useState([]);
-    const [search, setSearch] = useState("");
-    const [loading, setLoading] = useState(true);
-    const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 6;
 
     const fetchData = async () => {
-        setLoading(true);
-
-        const [{ data: consultasData, error: errorConsultas }, { data: pacientesData }] =
-            await Promise.all([
-                supabase.from("consultas").select("*").order("data_consulta", { ascending: false }),
-                supabase.from("pacientes").select("id_paciente, nome"),
-            ]);
-
-        if (errorConsultas) console.error("Erro ao buscar consultas:", errorConsultas);
+        const [{ data: consultasData }, { data: pacientesData }] = await Promise.all([
+            supabase.from("consultas").select("*"),
+            supabase.from("pacientes").select("id_paciente, nome"),
+        ]);
 
         setConsultas(consultasData || []);
         setPacientes(pacientesData || []);
-        setLoading(false);
     };
 
     useEffect(() => {
         fetchData();
     }, []);
 
-    const getPacienteNome = (id) => pacientes.find((p) => p.id_paciente === id)?.nome || "-";
+    const getPacienteNome = (id) =>
+        pacientes.find((p) => p.id_paciente === id)?.nome || "Paciente";
 
-    const filteredConsultas = consultas.filter((c) =>
-        getPacienteNome(c.id_paciente).toLowerCase().includes(search.toLowerCase())
-    );
+    const eventos = consultas.map((c) => ({
+        id: c.id,
+        title: getPacienteNome(c.id_paciente),
+        start: `${c.data_consulta}T${c.hora_consulta}`,
+        end: calcularFim(c.data_consulta, c.hora_consulta, c.duracao_horas),
+        backgroundColor: "#9F6C4D",
+        borderColor: "#9F6C4D",
+        textColor: "#fff",
+    }));
 
-    const totalPages = Math.ceil(filteredConsultas.length / itemsPerPage);
-    const paginatedConsultas = filteredConsultas.slice(
-        (currentPage - 1) * itemsPerPage,
-        currentPage * itemsPerPage
-    );
-
-    const handlePrevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
-    const handleNextPage = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+    function calcularFim(data, hora, duracao) {
+        if (!duracao) return `${data}T${hora}`;
+        const dt = new Date(`${data}T${hora}`);
+        const [h, m] = duracao.split(":").map(Number);
+        dt.setHours(dt.getHours() + h);
+        dt.setMinutes(dt.getMinutes() + m);
+        return dt.toISOString();
+    }
 
     return (
         <div className="flex min-h-screen bg-[#f8f8f8]">
             <aside className="flex-shrink-0">
                 <Sidebar />
             </aside>
+
             <main className="flex-1 p-8">
                 <header className="mb-8">
-                    <h1 className="text-3xl font-bold text-gray-800 mb-1">Consultas</h1>
-                    <p className="text-gray-500 text-sm">Gerencie e acompanhe as consultas cadastradas.</p>
+                    <h1 className="text-3xl font-bold text-gray-800 mb-1">Agenda de Consultas</h1>
+                    <p className="text-gray-500 text-sm">Visualize e gerencie suas consultas.</p>
                 </header>
 
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-3">
-                    <div className="flex-1 relative shadow-sm rounded-lg">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
-                        <input
-                            type="text"
-                            placeholder="Buscar por paciente..."
-                            value={search}
-                            onChange={(e) => {
-                                setSearch(e.target.value);
-                                setCurrentPage(1);
-                            }}
-                            className="w-full pl-9 pr-9 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40 text-sm bg-white"
-                        />
-                        {search && (
-                            <button
-                                onClick={() => setSearch("")}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                            >
-                                <X size={16} />
-                            </button>
-                        )}
-                    </div>
 
-                    <button
-                        onClick={() => navigate("/consultaForm")}
-                        className="flex items-center justify-center gap-2 bg-[#9F6C4D] text-white px-4 py-2 rounded-lg hover:bg-[#875B3F] transition text-sm font-medium shadow-sm whitespace-nowrap"
-                    >
-                        <Plus size={16} />
-                        Adicionar Consulta
-                    </button>
-                </div>
+                <div className="bg-white rounded-xl shadow-md p-4 border border-gray-200">
 
-                <div className="bg-white rounded-xl shadow-md border border-gray-200 overflow-x-auto min-h-[360px]">
-                    <table className="w-full text-sm text-left text-gray-700 min-w-[750px]">
-                        <thead className="bg-white text-gray-600 text-xs uppercase border-b border-gray-100">
-                            <tr>
-                                <th className="px-4 py-3 font-semibold">Paciente</th>
-                                <th className="px-4 py-3 font-semibold">Data</th>
-                                <th className="px-4 py-3 font-semibold">Hora</th>
-                                <th className="px-4 py-3 font-semibold">Duração</th>
-                                <th className="px-4 py-3 font-semibold">Tipo</th>
-                                <th className="px-4 py-3 font-semibold text-right">Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {loading ? (
-                                <tr>
-                                    <td colSpan="6" className="text-center py-6 text-gray-500">
-                                        Carregando consultas...
-                                    </td>
-                                </tr>
-                            ) : paginatedConsultas.length > 0 ? (
-                                paginatedConsultas.map((c) => (
-                                    <tr key={c.id} className="bg-white hover:bg-[#F6F1ED] transition-colors">
-                                        <td className="px-4 py-3">{getPacienteNome(c.id_paciente)}</td>
-                                        <td className="px-4 py-3">{new Date(c.data_consulta).toLocaleDateString("pt-BR")}</td>
-                                        <td className="px-4 py-3">{c.hora_consulta}</td>
-                                        <td className="px-4 py-3">{`${c.duracao_horas}h`}</td>
-                                        <td className="px-4 py-3">{c.tipo}</td>
-                                        <td className="px-4 py-3 text-right">
-                                            <button
-                                                onClick={() => navigate(`/consulta/edit/${c.id}`)}
-                                                className="p-2 rounded-md hover:bg-gray-100 transition"
-                                            >
-                                                <Edit size={17} className="text-gray-600" />
-                                            </button>
 
-                                        </td>
-                                    </tr>
-                                ))
-                            ) : (
-                                <tr>
-                                    <td colSpan="6" className="text-center py-6 text-gray-500 italic">
-                                        Nenhuma consulta encontrada.
-                                    </td>
-                                </tr>
-                            )}
-                        </tbody>
-                    </table>
-                </div>
+                    <style>{`
+  /* Fonte geral */
+  .fc {
+    font-family: Inter, sans-serif !important;
+    color: #444 !important;
+  }
 
-                <div className="flex justify-between items-center text-sm text-gray-600 mt-6 gap-3">
-                    <button
-                        onClick={handlePrevPage}
-                        disabled={currentPage === 1}
-                        className="flex items-center gap-1 bg-white px-3 py-2 rounded-lg shadow-sm border border-gray-200 disabled:opacity-50"
-                    >
-                        <ChevronLeft size={18} className="text-gray-600" /> Anterior
-                    </button>
-                    <span>
-                        Página {currentPage} de {totalPages || 1}
-                    </span>
-                    <button
-                        onClick={handleNextPage}
-                        disabled={currentPage === totalPages || totalPages === 0}
-                        className="flex items-center gap-1 bg-white px-3 py-2 rounded-lg shadow-sm border border-gray-200 disabled:opacity-50"
-                    >
-                        Próxima <ChevronRight size={18} className="text-gray-600" />
-                    </button>
+  /* Título */
+  .fc-toolbar-title {
+    font-size: 1.4rem !important;
+    font-weight: 600 !important;
+    color: #2d2d2d !important;
+  }
+
+  /* BOTÕES */
+  .fc-button {
+    background: #ffffff !important;
+    border: 1px solid #d1d5db !important;
+    color: #4b5563 !important;
+    border-radius: 8px !important;
+    padding: 6px 14px !important;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+
+  .fc-button:hover {
+    background: #f3f3f3 !important;
+  }
+
+  .fc-button-primary:not(.fc-button-active):hover {
+    background: #f3f3f3 !important;
+  }
+
+  .fc-button-active {
+    background: #9F6C4D !important;
+    border-color: #9F6C4D !important;
+    color: white !important;
+    font-weight: 600 !important;
+  }
+
+  /* 🔥 GAP ENTRE BOTÕES */
+  .fc-button-group,
+  .fc-toolbar-chunk {
+    display: flex;
+    gap: 6px !important;
+  }
+
+  /* Cabeçalho dos dias */
+  .fc-col-header-cell {
+    background: #fafafa !important;
+    font-weight: 600;
+    color: #555 !important;
+  }
+
+  /* Evento */
+  .fc-event {
+    padding: 4px 6px !important;
+    border-radius: 8px !important;
+    font-size: 0.85rem !important;
+  }
+
+  /* Hoje */
+  .fc-day-today {
+    background: #f7ebe4 !important;
+    position: relative;
+  }
+  .fc-day-today::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: #9F6C4D;
+  }
+`}</style>
+
+                    <FullCalendar
+                        plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+                        initialView="dayGridMonth"
+                        locale="pt-br"
+                        height="80vh"
+                        events={eventos}
+                        eventClick={(info) => navigate(`/consulta/edit/${info.event.id}`)}
+                        dateClick={(info) => navigate(`/consultaForm?data=${info.dateStr}`)}
+                        headerToolbar={{
+                            left: "prev,next today",
+                            center: "title",
+                            right: "dayGridMonth,timeGridWeek,timeGridDay",
+                        }}
+                    />
                 </div>
             </main>
         </div>

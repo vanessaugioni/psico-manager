@@ -1,10 +1,9 @@
 import { Link } from "react-router-dom";
-import { Facebook, Instagram, Mail, MessageCircle, MapPinned} from "lucide-react";
+import { Facebook, Instagram, Mail, MessageCircle, MapPinned } from "lucide-react";
 import Slider from "react-slick";
 import banner from "../assets/banner.png";
 import feedback1 from "../assets/feedback1.png";
 import feedback2 from "../assets/feedback2.png";
-import feedback3 from "../assets/feedback3.png";
 import fotoLuana from "../assets/luana.png";
 import { Monitor } from "lucide-react";
 
@@ -12,7 +11,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 export default function LandingPage() {
-  const feedbacks = [feedback1, feedback2, feedback3];
+  const feedbacks = [feedback1, feedback2];
 
   const sliderSettings = {
     dots: true,
@@ -28,63 +27,62 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen flex flex-col bg-[#9F6C4D] text-white overflow-x-hidden font-[Inter] transition-colors duration-300 ease-in-out">
 
-  <header className="flex justify-between items-center px-10 py-6 bg-[#8C5F44]/40 border-b border-white/20 backdrop-blur-lg sticky top-0 z-50 transition-all duration-300 relative">
+      <header className="flex justify-between items-center px-10 py-6 bg-[#8C5F44]/40 border-b border-white/20 backdrop-blur-lg sticky top-0 z-50 transition-all duration-300 relative">
 
-  <div className="flex space-x-5">
-    {[
-      {
-        icon: Instagram,
-        href: "https://www.instagram.com/psicologaluanafeliciano?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==",
-      },
-      { icon: Mail, href: "mailto:contato@luanafeliciano.com" },
-    ].map(({ icon: Icon, href }, idx) => (
-      <a
-        key={idx}
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="p-3 hover:bg-white/10 border border-[#C8A38D]/40 rounded-full transition-all duration-300 ease-in-out"
-      >
-        <Icon size={22} className="text-white" />
-      </a>
-    ))}
-  </div>
+        <div className="flex space-x-5">
+          {[
+            {
+              icon: Instagram,
+              href: "https://www.instagram.com/psicologaluanafeliciano?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==",
+            },
+            { icon: Mail, href: "mailto:contato@luanafeliciano.com" },
+          ].map(({ icon: Icon, href }, idx) => (
+            <a
+              key={idx}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-3 hover:bg-white/10 border border-[#C8A38D]/40 rounded-full transition-all duration-300 ease-in-out"
+            >
+              <Icon size={22} className="text-white" />
+            </a>
+          ))}
+        </div>
 
 
-  <nav className="absolute left-1/2 transform -translate-x-1/2 hidden md:flex space-x-10 text-base font-medium">
-    {[
-      { href: "#sobre", label: "Sobre" },
-      { href: "#consultas", label: "Consultas" },
-      { href: "#feedbacks", label: "Feedbacks" },
-      { href: "#contato", label: "Contato" },
-    ].map((item) => (
-      <a
-        key={item.href}
-        href={item.href}
-        className="relative group transition-colors text-white"
-      >
-        {item.label}
-        <span className="absolute left-0 bottom-0 w-0 h-[2px] bg-[#C8A38D] transition-all duration-300 group-hover:w-full"></span>
-      </a>
-    ))}
-  </nav>
+        <nav className="absolute left-1/2 transform -translate-x-1/2 hidden md:flex space-x-10 text-base font-medium">
+          {[
+            { href: "#sobre", label: "Sobre" },
+            { href: "#consultas", label: "Consultas" },
+            { href: "#feedbacks", label: "Feedbacks" },
+            { href: "#contato", label: "Contato" },
+          ].map((item) => (
+            <a
+              key={item.href}
+              href={item.href}
+              className="relative group transition-colors text-white"
+            >
+              {item.label}
+              <span className="absolute left-0 bottom-0 w-0 h-[2px] bg-[#C8A38D] transition-all duration-300 group-hover:w-full"></span>
+            </a>
+          ))}
+        </nav>
 
-  <Link
-    to="/login"
-    className="bg-white text-[#9F6C4D] px-5 py-3 rounded-xl font-medium shadow-md border border-[#C8A38D] hover:bg-[#8C5F44] hover:text-white transition-all duration-300"
-  >
-    Login
-  </Link>
-</header>
+        <Link
+          to="/login"
+          className="bg-white text-[#9F6C4D] px-5 py-3 rounded-xl font-medium shadow-md border border-[#C8A38D] hover:bg-[#8C5F44] hover:text-white transition-all duration-300"
+        >
+          Login
+        </Link>
+      </header>
 
       <section className="flex flex-col justify-center items-center text-center px-6 py-16 bg-[#9F6C4D] transition-all duration-500">
 
         <h2 className="text-3xl md:text-4xl font-bold mb-4 tracking-wide">
-          Bem-estar com Luana
+          Psicóloga Luana Feliciano
         </h2>
         <p className="max-w-2xl text-base md:text-lg text-gray-100/90 mb-8 leading-relaxed">
-          Cuidar da mente é um ato de coragem. Aqui você encontra acolhimento, escuta e equilíbrio emocional em cada consulta.
-        </p>
+          Especialista em Psicologia Hospitalar e da Saúde        </p>
       </section>
 
 
@@ -230,7 +228,7 @@ export default function LandingPage() {
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center gap-2 bg-white text-[#8C5F44] px-6 py-3 rounded-lg font-medium shadow-sm hover:bg-green-600 hover:text-white transition-all duration-300 w-max"            >
-              
+
               <MapPinned size={18} />
               Acessar endereço
             </a>
@@ -254,8 +252,14 @@ export default function LandingPage() {
       </section>
 
 
-      <section id="feedbacks" className="px-6 py-16 text-center backdrop-blur-sm  bg-[#8C5F44]">
-        <h3 className="text-2xl md:text-3xl font-semibold mb-8">Feedbacks</h3>
+      <section
+        id="feedbacks"
+        className="px-6 py-16 text-center backdrop-blur-sm bg-[#8C5F44]"
+      >
+        <h3 className="text-2xl md:text-3xl font-semibold mb-8">
+          Feedbacks dos pacientes
+        </h3>
+
         <div className="max-w-3xl mx-auto">
           <Slider {...sliderSettings}>
             {feedbacks.map((img, idx) => (
@@ -263,13 +267,24 @@ export default function LandingPage() {
                 <img
                   src={img}
                   alt={`Feedback ${idx + 1}`}
-                  className="mx-auto rounded-lg shadow-lg transition-transform duration-500 hover:scale-105"
+                  className="
+              mx-auto 
+              rounded-lg 
+              shadow-lg 
+              transition-transform 
+              duration-500
+              max-w-[85%]  
+              h-auto
+            "
                 />
               </div>
             ))}
           </Slider>
         </div>
       </section>
+
+
+
 
 
       <footer className="text-center text-sm text-gray-100/80 py-5 border-t border-white/10 bg-[#8C5F44]">
