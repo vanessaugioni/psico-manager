@@ -217,7 +217,7 @@ export default function PacienteForm() {
         <Sidebar />
       </aside>
 
-      <main className="flex-1 p-6 space-y-8">
+      <main className="flex-1 space-y-8 p-8">
 
 
         <div className="mb-4">
@@ -230,14 +230,39 @@ export default function PacienteForm() {
         <div className="flex gap-3 mb-6 justify-end">
           <button
             onClick={() => navigate("/pacientes")}
-            className="px-4 py-2 rounded-md bg-gray-200 hover:bg-gray-300"
+            className="
+  h-10 px-5
+  flex items-center justify-center gap-2 text-[#4A3F39]
+  rounded-lg
+  font-normal text-sm
+  shadow-md
+
+  transition-all duration-300
+  hover:bg-gray-300
+  hover:shadow-lg
+  active:scale-[0.97]
+  bg-gray-200
+
+"
           >
             Cancelar
           </button>
 
           <button
             onClick={handleSaveID}
-            className="px-4 py-2 rounded-md bg-[#9F6C4D] text-white hover:bg-[#84533b]"
+            className="
+  h-10 px-5
+  flex items-center justify-center gap-2
+  bg-[#9F6C4D] text-white
+  rounded-lg 
+  font-normal text-sm
+  shadow-md
+
+  transition-all duration-300
+  hover:bg-[#875B3F]
+  hover:shadow-lg
+  active:scale-[0.97]
+"
           >
             Salvar
           </button>
@@ -283,21 +308,43 @@ export default function PacienteForm() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
 
               <input
-                className={`${inputClass} ${errors.fullName ? "border-red-500" : ""}`}
+                className={`
+  w-full pr-9 h-10
+  border rounded-lg 
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+  ${inputClass}
+  ${errors.fullName ? "border-red-500" : "border-gray-200"}
+`}
                 placeholder="Nome Completo *"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
+
               />
 
               <input
-                className={inputClass}
+                className={`
+  ${inputClass}
+  w-full pr-9 h-10 
+  border border-gray-200 rounded-lg
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+`}
+
                 placeholder="Nome Social"
                 value={socialName}
                 onChange={(e) => setSocialName(e.target.value)}
               />
 
               <IMaskInput
-                className={`${inputClass} ${errors.cpf ? "border-red-500" : ""}`}
+                className={`
+  w-full pr-9 h-10
+  border rounded-lg 
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+  ${inputClass}
+  ${errors.fullName ? "border-red-500" : "border-gray-200"}
+`}
                 placeholder="CPF *"
                 mask="000.000.000-00"
                 value={cpf}
@@ -306,8 +353,14 @@ export default function PacienteForm() {
 
               <input
                 type="date"
-                className={`${inputClass} ${errors.birthDate ? "border-red-500" : ""}`}
-                value={birthDate}
+                className={`
+  w-full pr-9 h-10
+  border rounded-lg 
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+  ${inputClass}
+  ${errors.fullName ? "border-red-500" : "border-gray-200"}
+`} value={birthDate}
                 onChange={(e) => {
                   setBirthDate(e.target.value);
                   setAge(calcularIdade(e.target.value));
@@ -316,16 +369,30 @@ export default function PacienteForm() {
 
               <input
                 disabled
-                className={`${inputClass} bg-gray-100`}
+                className={`
+  ${inputClass}
+  w-full pr-9 h-10 
+  border border-gray-200 rounded-lg
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm transition-all duration-200 bg-gray-100
+`}
                 value={age ?? ""}
-                placeholder="Idade"
+                placeholder="Idade (automático)"
               />
 
               <select
-                className={inputClass}
+                className={`
+    ${inputClass}
+    w-full h-10 py-2
+    border border-gray-200 rounded-lg
+    focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+    text-sm bg-white transition-all duration-200 appearance-none
+  `}
                 value={gender}
                 onChange={(e) => setGender(e.target.value)}
               >
+
+
                 <option value="">Selecione o Gênero</option>
                 {generoOptions.map((g) => (
                   <option key={g.id_genero} value={g.id_genero}>
@@ -335,11 +402,17 @@ export default function PacienteForm() {
               </select>
 
               <select
-                className={inputClass}
+                className={`
+    ${inputClass}
+    w-full h-10 py-2
+    border border-gray-200 rounded-lg
+    focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+    text-sm bg-white transition-all duration-200 appearance-none
+  `}
                 value={sexualOrientation}
                 onChange={(e) => setSexualOrientation(e.target.value)}
               >
-                <option value="">Orientação Sexual</option>
+                <option value=""> Selecione a Orientação</option>
                 {orientacaoOptions.map((o) => (
                   <option key={o.id_orientacao} value={o.id_orientacao}>
                     {o.descricao}
@@ -348,11 +421,17 @@ export default function PacienteForm() {
               </select>
 
               <select
-                className={inputClass}
+                className={`
+    ${inputClass}
+    w-full h-10 py-2
+    border border-gray-200 rounded-lg
+    focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+    text-sm bg-white transition-all duration-200 appearance-none
+  `}
                 value={maritalStatus}
                 onChange={(e) => setMaritalStatus(e.target.value)}
               >
-                <option value="">Estado Civil</option>
+                <option value="">Selecione Estado Civil</option>
                 {estadoCivilOptions.map((e) => (
                   <option key={e.id_estado_civil} value={e.id_estado_civil}>
                     {e.descricao}
@@ -372,18 +451,30 @@ export default function PacienteForm() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 
             <input
-              className={inputClass}
+              className={`
+  ${inputClass}
+  w-full pr-9 h-10 
+  border border-gray-200 rounded-lg
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+`}
               placeholder="Profissão"
               value={profession}
               onChange={(e) => setProfession(e.target.value)}
             />
 
             <select
-              className={inputClass}
+              className={`
+    ${inputClass}
+    w-full h-10 py-2
+    border border-gray-200 rounded-lg
+    focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+    text-sm bg-white transition-all duration-200 appearance-none
+  `}
               value={religion}
               onChange={(e) => setReligion(e.target.value)}
             >
-              <option value="">Religião</option>
+              <option value="">Selecione Religião</option>
               {religiaoOptions.map((r) => (
                 <option key={r.id_religiao} value={r.id_religiao}>
                   {r.descricao}
@@ -392,11 +483,17 @@ export default function PacienteForm() {
             </select>
 
             <select
-              className={inputClass}
+              className={`
+    ${inputClass}
+    w-full h-10 py-2
+    border border-gray-200 rounded-lg
+    focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+    text-sm bg-white transition-all duration-200 appearance-none
+  `}
               value={education}
               onChange={(e) => setEducation(e.target.value)}
             >
-              <option value="">Escolaridade</option>
+              <option value="">Selecione Escolaridade</option>
               {escolaridadeOptions.map((e) => (
                 <option key={e.id_escolaridade} value={e.id_escolaridade}>
                   {e.descricao}
@@ -407,7 +504,13 @@ export default function PacienteForm() {
           </div>
 
           <textarea
-            className={textareaClass}
+            className={`
+  ${inputClass}
+  w-full pr-9
+  border border-gray-200 rounded-lg
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+`}
             placeholder="Composição Familiar"
             value={familyComposition}
             onChange={(e) => setFamilyComposition(e.target.value)}
@@ -422,14 +525,26 @@ export default function PacienteForm() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
             <input
-              className={inputClass}
+              className={`
+  ${inputClass}
+  w-full pr-9 h-10 
+  border border-gray-200 rounded-lg
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+`}
               placeholder="Medicação"
               value={medication}
               onChange={(e) => setMedication(e.target.value)}
             />
 
             <input
-              className={inputClass}
+              className={`
+  ${inputClass}
+  w-full pr-9 h-10 
+  border border-gray-200 rounded-lg
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+`}
               placeholder="Doenças"
               value={diseases}
               onChange={(e) => setDiseases(e.target.value)}
@@ -438,7 +553,13 @@ export default function PacienteForm() {
           </div>
 
           <textarea
-            className={textareaClass}
+            className={`
+  ${inputClass}
+  w-full pr-9 
+  border border-gray-200 rounded-lg
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+`}
             placeholder="Observações"
             value={observation}
             onChange={(e) => setObservation(e.target.value)}
@@ -453,25 +574,43 @@ export default function PacienteForm() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 
             <input
-              className={inputClass}
+              className={`
+  ${inputClass}
+  w-full pr-9 h-10 
+  border border-gray-200 rounded-lg
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+`}
               placeholder="Endereço"
               value={address}
               onChange={(e) => setAddress(e.target.value)}
             />
 
             <input
-              className={inputClass}
+              className={`
+  ${inputClass}
+  w-full pr-9 h-10 
+  border border-gray-200 rounded-lg
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+`}
               placeholder="Número"
               value={number}
               onChange={(e) => setNumber(e.target.value)}
             />
 
             <select
-              className={inputClass}
+              className={`
+    ${inputClass}
+    w-full h-10 py-2
+    border border-gray-200 rounded-lg
+    focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+    text-sm bg-white transition-all duration-200 appearance-none
+  `}
               value={country}
               onChange={(e) => setCountry(e.target.value)}
             >
-              <option value="">País</option>
+              <option value="">Selecione o País</option>
               {paisOptions.map((p) => (
                 <option key={p.id_pais} value={p.id_pais}>
                   {p.nome}
@@ -480,7 +619,14 @@ export default function PacienteForm() {
             </select>
 
             <IMaskInput
-              className={`${inputClass} ${errors.phone ? "border-red-500" : ""}`}
+              className={`
+  w-full pr-9 h-10
+  border rounded-lg 
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+  ${inputClass}
+  ${errors.fullName ? "border-red-500" : "border-gray-200"}
+`}
               placeholder="Celular *"
               mask="+55 (00) 00000-0000"
               value={phone}
@@ -488,7 +634,13 @@ export default function PacienteForm() {
             />
 
             <IMaskInput
-              className={inputClass}
+              className={`
+  ${inputClass}
+  w-full pr-9 h-10 
+  border border-gray-200 rounded-lg
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+`}
               placeholder="Contato de Emergência"
               mask="+55 (00) 00000-0000"
               value={emergencyContact}
@@ -496,7 +648,13 @@ export default function PacienteForm() {
             />
 
             <input
-              className={inputClass}
+              className={`
+  ${inputClass}
+  w-full pr-9 h-10 
+  border border-gray-200 rounded-lg
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+`}
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}

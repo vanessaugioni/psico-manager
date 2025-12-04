@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import Sidebar from "../components/Sidebar";
 import { supabase } from "../lib/supabaseClient";
-import { toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function ConfiguracaoEdit() {
   const [loading, setLoading] = useState(false);
@@ -11,24 +12,27 @@ export default function ConfiguracaoEdit() {
   const [nomePsicologa, setNomePsicologa] = useState("");
   const [emailNotificacao, setEmailNotificacao] = useState("");
 
-
   const [novoEmailLogin, setNovoEmailLogin] = useState("");
   const [novaSenha, setNovaSenha] = useState("");
 
-
   const [inicioExpediente, setInicioExpediente] = useState("08:00");
   const [fimExpediente, setFimExpediente] = useState("18:00");
+
   const [avisarPorEmail, setAvisarPorEmail] = useState(false);
   const [lembrete24h, setLembrete24h] = useState(false);
   const [lembrete1h, setLembrete1h] = useState(false);
 
+  const inputClass =
+    "w-full p-3 border border-gray-200 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40 text-sm bg-white transition-all duration-200";
+
+  const blockClass =
+    "bg-white border border-gray-200 rounded-xl p-6 shadow-sm space-y-6";
+
+  const sectionTitle = "text-lg font-semibold text-gray-800";
 
   useEffect(() => {
     async function fetchConfig() {
-      const { data, error } = await supabase
-        .from("configuracoes")
-        .select("*")
-        .single();
+      const { data } = await supabase.from("configuracoes").select("*").single();
 
       if (data) {
         setNomePsicologa(data.nome_psicologa || "");
@@ -41,31 +45,22 @@ export default function ConfiguracaoEdit() {
         setFotoPreview(data.foto_url || null);
       }
     }
-
     fetchConfig();
   }, []);
-
 
   async function uploadFoto() {
     if (!foto) return fotoPreview;
 
     const fileName = `psicologa_${Date.now()}`;
-    const { data, error } = await supabase.storage
-      .from("avatars")
-      .upload(fileName, foto);
+    const { error } = await supabase.storage.from("avatars").upload(fileName, foto);
 
     if (error) {
       toast.error("Erro ao enviar foto.");
       return fotoPreview;
     }
 
-    const url = supabase.storage
-      .from("avatars")
-      .getPublicUrl(fileName).data.publicUrl;
-
-    return url;
+    return supabase.storage.from("avatars").getPublicUrl(fileName).data.publicUrl;
   }
-
 
   async function salvar() {
     setLoading(true);
@@ -93,7 +88,6 @@ export default function ConfiguracaoEdit() {
     setLoading(false);
   }
 
-
   async function atualizarLogin() {
     if (novoEmailLogin) {
       const { error } = await supabase.auth.updateUser({ email: novoEmailLogin });
@@ -109,153 +103,180 @@ export default function ConfiguracaoEdit() {
   }
 
   return (
-    <div className="flex min-h-screen bg-[#f8f8f8]">
-      <Sidebar />
+    <div className="flex min-h-screen bg-[#f6f6f6]">
+      <ToastContainer />
 
-      <div className="flex-1 p-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-6">Configurações</h1>
+      <aside className="w-20 sm:w-64 h-screen sticky top-0">
+        <Sidebar />
+      </aside>
 
- 
-        <div className="bg-white p-6 rounded-2xl shadow-md border-gray-200 mb-8">
-          <h2 className="text-xl font-semibold mb-4 text-gray-700">
-            Perfil da Psicóloga
-          </h2>
+      <main className="flex-1 space-y-8 p-8">
+        <header className="mb-4">
+          <h1 className="text-3xl font-bold text-gray-800 mb-1">Configurações</h1>
+          <p className="text-gray-500 text-sm">
+            Personalize informações, horários e preferências da plataforma.
+          </p>
+        </header>
 
-          <div className="mb-4">
-            <p className="text-gray-600 mb-2">Foto da psicóloga:</p>
-
-            {fotoPreview && (
-              <img
-                src={fotoPreview}
-                alt="Foto"
-                className="w-24 h-24 rounded-full mb-3 object-cover border"
-              />
-            )}
-
-            <input
-              type="file"
-              onChange={(e) => {
-                setFoto(e.target.files[0]);
-                setFotoPreview(URL.createObjectURL(e.target.files[0]));
-              }}
-            />
-          </div>
-
-          <label className="text-gray-600">Nome:</label>
-          <input
-            className="w-full p-2 mb-3 border rounded"
-            value={nomePsicologa}
-            onChange={(e) => setNomePsicologa(e.target.value)}
-          />
-
-          <label className="text-gray-600">Email para notificações:</label>
-          <input
-            className="w-full p-2 mb-3 border rounded"
-            value={emailNotificacao}
-            onChange={(e) => setEmailNotificacao(e.target.value)}
-          />
+        {/* BOTÕES SUPERIORES */}
+        <div className="flex gap-3 mb-6 justify-end">
+          <button
+            onClick={() => window.history.back()}
+            className="
+              h-10 px-5 flex items-center justify-center gap-2
+              text-[#4A3F39] bg-gray-200 rounded-lg shadow-md
+              transition-all duration-300 font-normal text-sm
+              hover:bg-gray-300 hover:shadow-lg active:scale-[0.97]
+            "
+          >
+            Cancelar
+          </button>
 
           <button
             onClick={salvar}
-            disabled={loading}
-            className="bg-[#9F6C4D] text-white px-4 py-2 rounded-lg mt-3"
+            className="
+              h-10 px-5 flex items-center justify-center gap-2
+              bg-[#9F6C4D] text-white rounded-lg shadow-md
+              font-normal text-sm transition-all duration-300
+              hover:bg-[#875B3F] hover:shadow-lg active:scale-[0.97]
+            "
           >
-            {loading ? "Salvando..." : "Salvar perfil"}
+            Salvar
           </button>
         </div>
 
-        <div className="bg-white p-6 rounded-2xl shadow-md border-gray-200 mb-8">
-          <h2 className="text-xl font-semibold mb-4 text-gray-700">
-            Atualizar Login
-          </h2>
+        <section className={blockClass}>
+          <p className={sectionTitle}>Perfil da Psicóloga</p>
+          <hr className="border-gray-300" />
 
-          <label className="text-gray-600">Novo email:</label>
-          <input
-            className="w-full p-2 mb-3 border rounded"
-            value={novoEmailLogin}
-            onChange={(e) => setNovoEmailLogin(e.target.value)}
-          />
+          {/* <div className="flex items-center gap-6">
+            {fotoPreview ? (
+              <img
+                src={fotoPreview}
+                alt="Foto"
+                className="w-24 h-24 rounded-full object-cover border"
+              />
+            ) : (
+              <div className="w-24 h-24 rounded-full bg-gray-100 flex items-center justify-center border">
+                <span className="text-gray-400 text-sm">Sem foto</span>
+              </div>
+            )}
 
-          <label className="text-gray-600">Nova senha:</label>
-          <input
-            type="password"
-            className="w-full p-2 mb-3 border rounded"
-            value={novaSenha}
-            onChange={(e) => setNovaSenha(e.target.value)}
-          />
+            <div className="flex-1">
+              <label className="text-sm text-gray-700 mb-1 block">Foto da Psicóloga</label>
+              <input
+                type="file"
+                className="text-sm"
+                onChange={(e) => {
+                  setFoto(e.target.files[0]);
+                  setFotoPreview(URL.createObjectURL(e.target.files[0]));
+                }}
+              />
+            </div>
+          </div> */}
 
-          <button
-            onClick={atualizarLogin}
-            className="bg-[#9F6C4D] text-white px-4 py-2 rounded-lg mt-1"
-          >
-            Atualizar login
-          </button>
-        </div>
-
-        <div className="bg-white p-6 rounded-2xl shadow-md border-gray-200">
-          <h2 className="text-xl font-semibold mb-4 text-gray-700">
-            Configurações do Sistema
-          </h2>
-
-          <div className="grid grid-cols-2 gap-4 mb-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
             <div>
-              <label className="text-gray-600">Início expediente:</label>
+              <label className="text-sm text-gray-700 mb-1 block">Nome</label>
+              <input
+                className={inputClass}
+                value={nomePsicologa}
+                onChange={(e) => setNomePsicologa(e.target.value)}
+              />
+            </div>
+
+            <div>
+              <label className="text-sm text-gray-700 mb-1 block">Email de Notificação</label>
+              <input
+                className={inputClass}
+                value={emailNotificacao}
+                onChange={(e) => setEmailNotificacao(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <p className={sectionTitle + " pt-4"}>Dados de Login</p>
+          <hr className="border-gray-300" />
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="text-sm text-gray-700 mb-1 block">Novo Email</label>
+              <input
+                className={inputClass}
+                value={novoEmailLogin}
+                onChange={(e) => setNovoEmailLogin(e.target.value)}
+              />
+            </div>
+
+            <div>
+              <label className="text-sm text-gray-700 mb-1 block">Nova Senha</label>
+              <input
+                type="password"
+                className={inputClass}
+                value={novaSenha}
+                onChange={(e) => setNovaSenha(e.target.value)}
+              />
+            </div>
+
+          
+          </div>
+
+          <p className={sectionTitle + " pt-4"}>Horários e Avisos</p>
+          <hr className="border-gray-300" />
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="text-sm text-gray-700 mb-1 block">Início do Expediente</label>
               <input
                 type="time"
-                className="w-full p-2 border rounded"
+                className={inputClass}
                 value={inicioExpediente}
                 onChange={(e) => setInicioExpediente(e.target.value)}
               />
             </div>
 
             <div>
-              <label className="text-gray-600">Fim expediente:</label>
+              <label className="text-sm text-gray-700 mb-1 block">Fim do Expediente</label>
               <input
                 type="time"
-                className="w-full p-2 border rounded"
+                className={inputClass}
                 value={fimExpediente}
                 onChange={(e) => setFimExpediente(e.target.value)}
               />
             </div>
-          </div>
 
-          <div className="space-y-2 mb-4">
-            <label className="flex items-center gap-2">
+            <label className="flex items-center gap-3 col-span-2 text-sm text-gray-700">
               <input
                 type="checkbox"
                 checked={avisarPorEmail}
                 onChange={(e) => setAvisarPorEmail(e.target.checked)}
+                className="w-4 h-4 cursor-pointer"
               />
-              Avisar por e-mail sobre novas consultas
+              Avisar por email sobre novas consultas
             </label>
 
-            <label className="flex items-center gap-2">
+            <label className="flex items-center gap-3 col-span-2 text-sm text-gray-700">
               <input
                 type="checkbox"
                 checked={lembrete24h}
                 onChange={(e) => setLembrete24h(e.target.checked)}
+                className="w-4 h-4 cursor-pointer"
               />
-              Enviar lembrete 24h antes
+              Enviar lembrete 24 horas antes
             </label>
 
-            <label className="flex items-center gap-2">
+            <label className="flex items-center gap-3 col-span-2 text-sm text-gray-700">
               <input
                 type="checkbox"
                 checked={lembrete1h}
                 onChange={(e) => setLembrete1h(e.target.checked)}
+                className="w-4 h-4 cursor-pointer"
               />
-              Enviar lembrete 1h antes
+              Enviar lembrete 1 hora antes
             </label>
           </div>
-
-          <button
-            onClick={salvar}
-            className="bg-[#9F6C4D] text-white px-4 py-2 rounded-lg"
-          >
-            Salvar configurações
-          </button>
-        </div>
-      </div>
+        </section>
+      </main>
     </div>
   );
 }

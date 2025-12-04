@@ -263,7 +263,7 @@ export default function PacienteEdit() {
 
   const handleDelete = async () => {
     const { error } = await supabase.from("pacientes").delete().eq("id_paciente", id);
-    if (error) toast.error("Erro ao excluir paciente.");
+    if (error) toast.error("Exclusão bloqueada: o paciente possui consultas e registros vinculados.");
     else {
       toast.success("Paciente excluído com sucesso!");
       setTimeout(() => navigate("/pacientes"), 1500);
@@ -298,30 +298,73 @@ export default function PacienteEdit() {
           </p>
         </header>
 
-        <div className="flex justify-end gap-2 mb-6">
+        <div className="flex gap-3 mb-6 justify-end">
+
+          {/* CANCELAR */}
           <button
             type="button"
             onClick={() => navigate("/pacientes")}
-            className="px-4 py-2 rounded-md bg-gray-200 hover:bg-gray-300 transition"
+            className="
+      h-10 px-5
+      flex items-center justify-center gap-2
+      text-[#4A3F39]
+      rounded-lg
+      font-normal text-sm
+      shadow-md
+
+      transition-all duration-300
+      hover:bg-gray-300
+      hover:shadow-lg
+      active:scale-[0.97]
+      bg-gray-200
+    "
           >
             Cancelar
           </button>
+
+          {/* SALVAR */}
           <button
             type="submit"
             onClick={handleUpdate}
-            className="px-4 py-2 rounded-md bg-[#9F6C4D] text-white hover:bg-[#8e5b41] transition"
+            className="
+      h-10 px-5
+      flex items-center justify-center gap-2
+      bg-[#9F6C4D] text-white
+      rounded-lg 
+      font-normal text-sm
+      shadow-md
+
+      transition-all duration-300
+      hover:bg-[#875B3F]
+      hover:shadow-lg
+      active:scale-[0.97]
+    "
           >
             Salvar
           </button>
 
+          {/* DELETAR */}
           <button
             type="button"
             onClick={() => setShowDeleteModal(true)}
-            className="p-2 rounded-md bg-red-600 text-white hover:bg-red-700 transition"
+            className="
+      h-10 px-4
+      flex items-center justify-center
+      bg-red-500 text-white
+      rounded-lg
+      shadow-md
+      
+      transition-all duration-300
+      hover:bg-red-600
+      hover:shadow-lg
+      active:scale-[0.97]
+    "
           >
             <Trash2 size={18} />
           </button>
+
         </div>
+
 
 
         <form className="w-full flex flex-col gap-6">
@@ -362,24 +405,49 @@ export default function PacienteEdit() {
                   placeholder="Nome Completo *"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
-                  className={`${inputClass} ${errors?.fullName ? "border-red-500" : ""}`}
+                  className={`
+  w-full pr-9 h-10
+  border rounded-lg 
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+  ${inputClass}
+  ${errors.fullName ? "border-red-500" : "border-gray-200"}
+`}
                 />
                 <input
                   placeholder="Nome Social"
                   value={socialName}
                   onChange={(e) => setSocialName(e.target.value)}
-                  className={inputClass}
-                />
+                  className={`
+  ${inputClass}
+  w-full pr-9 h-10 
+  border border-gray-200 rounded-lg
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+`} />
                 <IMaskInput
-                  className={`${inputClass} ${errors?.cpf ? "border-red-500" : ""}`}
+                  className={`
+  w-full pr-9 h-10
+  border rounded-lg 
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+  ${inputClass}
+  ${errors.fullName ? "border-red-500" : "border-gray-200"}
+`}
                   placeholder="CPF *"
                   mask="000.000.000-00"
                   value={cpf}
                   onAccept={(value) => setCpf(value)}
                 />
                 <input
-                  className={`${inputClass} ${errors?.birthDate ? "border-red-500" : ""}`}
-                  type="date"
+                  className={`
+  w-full pr-9 h-10
+  border rounded-lg 
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+  ${inputClass}
+  ${errors.fullName ? "border-red-500" : "border-gray-200"}
+`} type="date"
                   value={birthDate}
                   onChange={(e) => {
                     const value = e.target.value;
@@ -389,14 +457,25 @@ export default function PacienteEdit() {
                   max={new Date().toISOString().split("T")[0]}
                 />
                 <input
-                  className={`${inputClass} bg-gray-100 text-gray-500 cursor-not-allowed`}
-                  type="number"
+                  className={`
+  ${inputClass}
+  w-full pr-9 h-10 
+  border border-gray-200 rounded-lg
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm transition-all duration-200 bg-gray-100
+`} type="number"
                   value={age ?? ""}
                   placeholder="Idade"
                   disabled
                 />
                 <select
-                  className={`${inputClass} appearance-none bg-white`}
+                  className={`
+    ${inputClass}
+    w-full h-10 py-2
+    border border-gray-200 rounded-lg
+    focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+    text-sm bg-white transition-all duration-200 appearance-none
+  `}
                   value={gender}
                   onChange={(e) => setGender(e.target.value)}
                 >
@@ -408,8 +487,13 @@ export default function PacienteEdit() {
                   ))}
                 </select>
                 <select
-                  className={`${inputClass} appearance-none bg-white`}
-                  value={sexualOrientation}
+                  className={`
+    ${inputClass}
+    w-full h-10 py-2
+    border border-gray-200 rounded-lg
+    focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+    text-sm bg-white transition-all duration-200 appearance-none
+  `} value={sexualOrientation}
                   onChange={(e) => setSexualOrientation(e.target.value)}
                 >
                   <option value="">Selecione a Orientação</option>
@@ -420,11 +504,16 @@ export default function PacienteEdit() {
                   ))}
                 </select>
                 <select
-                  className={`${inputClass} appearance-none bg-white`}
-                  value={maritalStatus}
+                  className={`
+    ${inputClass}
+    w-full h-10 py-2
+    border border-gray-200 rounded-lg
+    focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+    text-sm bg-white transition-all duration-200 appearance-none
+  `} value={maritalStatus}
                   onChange={(e) => setMaritalStatus(e.target.value)}
                 >
-                  <option value="">Selecione o Estado Civil</option>
+                  <option value="">Selecione Estado Civil</option>
                   {estadoCivilOptions.map((e) => (
                     <option key={e.id} value={e.name}>
                       {e.name}
@@ -448,14 +537,24 @@ export default function PacienteEdit() {
               <div className="flex flex-col gap-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   <input
-                    className={inputClass}
-                    placeholder="Profissão"
+                    className={`
+  ${inputClass}
+  w-full pr-9 h-10 
+  border border-gray-200 rounded-lg
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+`} placeholder="Profissão"
                     value={profession}
                     onChange={(e) => setProfession(e.target.value)}
                   />
                   <select
-                    className={`${inputClass} appearance-none bg-white`}
-                    value={religion}
+                    className={`
+    ${inputClass}
+    w-full h-10 py-2
+    border border-gray-200 rounded-lg
+    focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+    text-sm bg-white transition-all duration-200 appearance-none
+  `} value={religion}
                     onChange={(e) => setReligion(e.target.value)}
                   >
                     <option value="">Selecione a Religião</option>
@@ -466,8 +565,13 @@ export default function PacienteEdit() {
                     ))}
                   </select>
                   <select
-                    className={`${inputClass} appearance-none bg-white`}
-                    value={education}
+                    className={`
+    ${inputClass}
+    w-full h-10 py-2
+    border border-gray-200 rounded-lg
+    focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+    text-sm bg-white transition-all duration-200 appearance-none
+  `} value={education}
                     onChange={(e) => setEducation(e.target.value)}
                   >
                     <option value="">Selecione a Escolaridade</option>
@@ -479,8 +583,13 @@ export default function PacienteEdit() {
                   </select>
                 </div>
                 <textarea
-                  className={textareaClass}
-                  placeholder="Composição Familiar"
+                  className={`
+  ${inputClass}
+  w-full pr-9  
+  border border-gray-200 rounded-lg
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+`} placeholder="Composição Familiar"
                   value={familyComposition}
                   onChange={(e) => setFamilyComposition(e.target.value)}
                 />
@@ -500,21 +609,36 @@ export default function PacienteEdit() {
               <div className="flex flex-col gap-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <input
-                    className={inputClass}
-                    placeholder="Medicação"
+                    className={`
+  ${inputClass}
+  w-full pr-9 h-10 
+  border border-gray-200 rounded-lg
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+`} placeholder="Medicação"
                     value={medication}
                     onChange={(e) => setMedication(e.target.value)}
                   />
                   <input
-                    className={inputClass}
-                    placeholder="Doenças"
+                    className={`
+  ${inputClass}
+  w-full pr-9 h-10 
+  border border-gray-200 rounded-lg
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+`} placeholder="Doenças"
                     value={diseases}
                     onChange={(e) => setDiseases(e.target.value)}
                   />
                 </div>
                 <textarea
-                  className={textareaClass}
-                  placeholder="Observação"
+                  className={`
+  ${inputClass}
+  w-full pr-9
+  border border-gray-200 rounded-lg
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+`} placeholder="Observação"
                   value={observation}
                   onChange={(e) => setObservation(e.target.value)}
                 />
@@ -533,20 +657,35 @@ export default function PacienteEdit() {
             {openSections.contact && (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 <input
-                  className={inputClass}
-                  placeholder="Endereço (Rua, Av...)"
+                  className={`
+  ${inputClass}
+  w-full pr-9 h-10 
+  border border-gray-200 rounded-lg
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+`} placeholder="Endereço (Rua, Av...)"
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
                 />
                 <input
-                  className={inputClass}
-                  placeholder="Número"
+                  className={`
+  ${inputClass}
+  w-full pr-9 h-10 
+  border border-gray-200 rounded-lg
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+`} placeholder="Número"
                   value={number}
                   onChange={(e) => setNumber(e.target.value)}
                 />
                 <select
-                  className={`${inputClass} appearance-none bg-white`}
-                  value={country}
+                  className={`
+    ${inputClass}
+    w-full h-10 py-2
+    border border-gray-200 rounded-lg
+    focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+    text-sm bg-white transition-all duration-200 appearance-none
+  `} value={country}
                   onChange={(e) => setCountry(e.target.value)}
                 >
                   <option value="">Selecione o País</option>
@@ -557,21 +696,40 @@ export default function PacienteEdit() {
                   ))}
                 </select>
                 <IMaskInput
-                  className={inputClass}
                   mask="+55 (00) 00000-0000"
                   placeholder="Celular *"
                   value={phone}
+                  className={`
+  w-full pr-9 h-10
+  border rounded-lg 
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+  ${inputClass}
+  ${errors.fullName ? "border-red-500" : "border-gray-200"}
+`}
                   onAccept={(value) => setPhone(value)}
                 />
                 <input
-                  className={inputClass}
+                  className={`
+  ${inputClass}
+  w-full pr-9 h-10 
+  border border-gray-200 rounded-lg
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+`}
                   placeholder="Contato de Emergência"
                   mask="+55 (00) 00000-0000"
                   value={emergencyContact}
                   onChange={(e) => setEmergencyContact(e.target.value)}
                 />
                 <input
-                  className={inputClass}
+                  className={`
+  ${inputClass}
+  w-full pr-9 h-10 
+  border border-gray-200 rounded-lg
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+`}
                   placeholder="E-mail"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
@@ -583,27 +741,62 @@ export default function PacienteEdit() {
 
 
         {showDeleteModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg p-6 w-80 shadow-lg">
-              <h2 className="text-lg font-semibold mb-4 text-gray-800">
+          <div className="fixed inset-0 bg-black/60 bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="
+      bg-white rounded-xl shadow-xl 
+      w-[90%] max-w-[420px] 
+      p-7
+    ">
+              <h2 className="text-xl font-semibold mb-4 text-gray-800">
                 Confirmar Exclusão
               </h2>
-              <p className="text-gray-600 mb-6">
-                Tem certeza que deseja excluir este paciente? Esta ação não pode ser desfeita.
+
+              <p className="text-gray-600 mb-8 leading-relaxed">
+                Tem certeza que deseja excluir este paciente?
+                Esta ação não pode ser desfeita.
               </p>
+
               <div className="flex justify-end gap-3">
+
+                {/* Botão Cancelar */}
                 <button
                   onClick={() => setShowDeleteModal(false)}
-                  className="px-4 py-2 rounded-md bg-gray-200 hover:bg-gray-300 transition"
+                  className="
+            h-10 px-5
+            flex items-center justify-center
+            bg-gray-200 text-[#4A3F39]
+            rounded-lg 
+            font-normal text-sm
+            shadow-md
+
+            transition-all duration-300
+            hover:bg-gray-300
+            hover:shadow-lg
+            active:scale-[0.97]
+          "
                 >
                   Cancelar
                 </button>
+
+                {/* Botão Excluir */}
                 <button
                   onClick={() => {
                     handleDelete();
                     setShowDeleteModal(false);
                   }}
-                  className="px-4 py-2 rounded-md bg-red-600 text-white hover:bg-red-700 transition"
+                  className="
+            h-10 px-5
+            flex items-center justify-center
+            bg-red-500 text-white
+            rounded-lg 
+            font-normal text-sm
+            shadow-md
+
+            transition-all duration-300
+            hover:bg-red-600
+            hover:shadow-lg
+            active:scale-[0.97]
+          "
                 >
                   Excluir
                 </button>
@@ -611,6 +804,7 @@ export default function PacienteEdit() {
             </div>
           </div>
         )}
+
       </main>
     </div>
   );

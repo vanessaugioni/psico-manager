@@ -57,10 +57,12 @@ export default function PacienteList() {
 
   return (
     <div className="flex min-h-screen bg-[#f8f8f8]">
-      <aside className="flex-shrink-0">
-        <Sidebar />
-      </aside>
+      <Sidebar />
+
       <main className="flex-1 p-8">
+
+
+
         <header className="mb-8">
           <h1 className="text-3xl font-bold text-gray-800 mb-1">Pacientes</h1>
           <p className="text-gray-500 text-sm">
@@ -68,28 +70,31 @@ export default function PacienteList() {
           </p>
         </header>
 
-        {/* Busca e Adicionar */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-3">
+
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+
           <div className="flex-1 relative shadow-sm rounded-lg">
             <Search
               className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
               size={18}
             />
+
             <input
               type="text"
               placeholder="Buscar paciente..."
               value={search}
               onChange={(e) => {
                 setSearch(e.target.value);
-                setCurrentPage(1); // resetar paginação ao buscar
+                setCurrentPage(1);
               }}
-              className="w-full pl-9 pr-9 py-2 border border-gray-200 rounded-lg 
-              focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40 text-sm bg-white"
+              className="w-full pl-9 pr-9 h-10 border border-gray-200 rounded-lg 
+      focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40 text-sm bg-white transition-all duration-200"
             />
+
             {search && (
               <button
                 onClick={() => setSearch("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-all duration-200"
               >
                 <X size={16} />
               </button>
@@ -98,13 +103,26 @@ export default function PacienteList() {
 
           <button
             onClick={() => navigate("/pacienteForm")}
-            className="flex items-center justify-center gap-2 bg-[#9F6C4D] text-white px-4 py-2 
-            rounded-lg hover:bg-[#875B3F] transition text-sm font-medium shadow-sm whitespace-nowrap"
+            className="
+  h-10 px-5
+  flex items-center justify-center gap-2
+  bg-[#9F6C4D] text-white
+  rounded-lg 
+  font-normal text-sm
+  shadow-md
+
+  transition-all duration-300
+  hover:bg-[#875B3F]
+  hover:shadow-lg
+  active:scale-[0.97]
+"
+
           >
-            <Plus size={16} />
-            Adicionar
+            Novo paciente
           </button>
+
         </div>
+
 
 
         <div className="bg-white rounded-xl shadow-md border border-gray-200 overflow-x-auto min-h-[360px]">

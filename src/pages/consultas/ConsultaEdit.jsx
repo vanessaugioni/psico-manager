@@ -1,50 +1,55 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Sidebar from "../../components/Sidebar";
-import { ChevronDown, ChevronUp } from "lucide-react";
 import { supabase } from "../../lib/supabaseClient";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Trash2 } from "lucide-react";
 
 export default function ConsultaEdit() {
   const navigate = useNavigate();
-  const { id } = useParams(); 
+  const { id } = useParams();
 
   const [pacientes, setPacientes] = useState([]);
   const [pacienteId, setPacienteId] = useState("");
   const [dataConsulta, setDataConsulta] = useState("");
   const [horaConsulta, setHoraConsulta] = useState("");
-  const [duracaoTime, setDuracaoTime] = useState(""); 
+  const [duracao, setDuracao] = useState("");
   const [tipo, setTipo] = useState("");
   const [descricao, setDescricao] = useState("");
   const [orientacao, setOrientacao] = useState("");
 
-  const [openSections, setOpenSections] = useState({
-    basico: true,
-    detalhes: false,
+  const [errors, setErrors] = useState({
+    paciente: false,
+    dataConsulta: false,
+    horaConsulta: false,
+    duracao: false,
+    tipo: false,
   });
 
   const inputClass =
-    "w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#9F6C4D] transition bg-white text-gray-700 placeholder-gray-400 text-sm sm:text-base";
-  const textareaClass = `${inputClass} h-24 resize-none`;
-  const sectionClass =
-    "bg-white rounded-lg shadow-md border border-gray-200 p-6 mb-4";
+    "w-full p-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40 text-sm bg-white transition-all duration-200";
+  const blockClass =
+    "bg-white border border-gray-200 rounded-xl p-6 shadow-sm space-y-4";
+  const sectionTitle = "text-lg font-semibold text-gray-800 mb-1";
 
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  // FETCH PACIENTES
   useEffect(() => {
     const fetchPacientes = async () => {
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from("pacientes")
         .select("id_paciente, nome")
         .order("nome", { ascending: true });
-      if (error) {
-        console.error("Erro ao buscar pacientes:", error);
-      } else {
-        setPacientes(data || []);
-      }
+
+      setPacientes(data || []);
     };
+
     fetchPacientes();
   }, []);
 
+  // FETCH CONSULTA
   useEffect(() => {
     const fetchConsulta = async () => {
       const { data, error } = await supabase
@@ -54,7 +59,6 @@ export default function ConsultaEdit() {
         .single();
 
       if (error) {
-        console.error("Erro ao carregar consulta:", error);
         toast.error("Não foi possível carregar os dados da consulta");
         return;
       }
@@ -62,36 +66,51 @@ export default function ConsultaEdit() {
       setPacienteId(data.id_paciente);
       setDataConsulta(data.data_consulta);
       setHoraConsulta(data.hora_consulta);
-      setDuracaoTime(data.duracao_horas.slice(0, 5)); 
+      setDuracao(data.duracao_horas.slice(0, 5));
       setTipo(data.tipo);
       setDescricao(data.descricao);
       setOrientacao(data.orientacao);
     };
+
     fetchConsulta();
   }, [id]);
 
-  const toggleSection = (sec) => {
-    setOpenSections({ ...openSections, [sec]: !openSections[sec] });
+  // EXCLUIR CONSULTA
+  const deletarConsulta = async () => {
+    const { error } = await supabase
+      .from("consultas")
+      .delete()
+      .eq("id", id);
+
+    if (error) {
+      toast.error("Erro ao excluir consulta!");
+      return;
+    }
+
+    toast.success("Consulta excluída com sucesso!");
+    setTimeout(() => navigate("/consultas"), 1200);
   };
 
+  // SALVAR ALTERAÇÕES
   const handleSave = async (e) => {
     e.preventDefault();
 
+    const newErrors = {
+      paciente: !pacienteId,
+      dataConsulta: !dataConsulta,
+      horaConsulta: !horaConsulta,
+      duracao: !duracao,
+      tipo: !tipo,
+    };
 
-    if (!pacienteId || !dataConsulta || !horaConsulta || !duracaoTime || !tipo) {
-      toast.error("Preencha todos os campos obrigatórios!");
+    setErrors(newErrors);
+
+    if (Object.values(newErrors).some(Boolean)) {
+      toast.error("Preencha corretamente todos os campos obrigatórios!");
       return;
     }
 
-    if (!/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/.test(duracaoTime)) {
-      toast.error("Duração inválida! Use o formato HH:MM");
-      return;
-    }
-
-
-    const duracaoEnviar =
-      duracaoTime.length === 5 ? duracaoTime + ":00" : duracaoTime;
-
+    const duracaoEnviar = duracao.length === 5 ? duracao + ":00" : duracao;
 
     const { error } = await supabase
       .from("consultas")
@@ -107,7 +126,6 @@ export default function ConsultaEdit() {
       .eq("id", id);
 
     if (error) {
-      console.error(error);
       toast.error("Erro ao atualizar a consulta!");
       return;
     }
@@ -118,126 +136,196 @@ export default function ConsultaEdit() {
 
   const handleCancel = () => navigate("/consultas");
 
-  return (
-    <div className="flex min-h-screen bg-[#f8f8f8]">
-      <ToastContainer position="top-right" />
-      <aside className="flex-shrink-0 w-20 sm:w-64 h-screen sticky top-0">
-        <Sidebar />
-      </aside>
+  // MODAL
+  const DeleteModal = () => (
+    <div className="fixed inset-0 bg-black/60 bg-opacity-40 flex items-center justify-center z-[999]">
+      <div className="bg-white p-6 rounded-xl shadow-lg w-80 text-center">
+        <h2 className="text-xl font-bold text-gray-800 mb-3">
+          Excluir consulta?
+        </h2>
 
-      <main className="flex-1 p-4 sm:p-8 flex flex-col">
-        <header className="mb-4">
-          <h1 className="text-3xl font-bold text-gray-800">Editar Consulta</h1>
-          <p className="text-gray-500">
-            Altere os dados da consulta do paciente.
-          </p>
-        </header>
+        <p className="text-gray-600 mb-6">Essa ação não pode ser desfeita.</p>
 
-        <div className="flex justify-end gap-2 mb-6">
+        <div className="flex justify-between gap-3">
           <button
-            onClick={handleCancel}
-            className="px-4 py-2 rounded-md bg-gray-200 hover:bg-gray-300"
+            onClick={() => setShowDeleteModal(false)}
+            className="flex-1 h-10 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-all"
           >
             Cancelar
           </button>
+
+          <button
+            onClick={deletarConsulta}
+            className="flex-1 h-10 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-all"
+          >
+            Excluir
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="flex min-h-screen bg-[#f6f6f6]">
+      <ToastContainer />
+
+      <aside className="w-20 sm:w-64 h-screen sticky top-0">
+        <Sidebar />
+      </aside>
+
+      <main className="flex-1 space-y-8 p-8">
+        {/* TITULO */}
+        <div className="mb-4">
+          <h1 className="text-3xl font-bold text-gray-800">Editar Consulta</h1>
+          <p className="text-gray-500 text-sm">Atualize as informações da consulta.</p>
+        </div>
+
+        {/* BOTÕES */}
+        <div className="flex gap-3 mb-6 justify-end">
+          <button
+            onClick={handleCancel}
+            className="h-10 px-5 bg-gray-200 text-[#4A3F39] rounded-lg text-sm shadow-md hover:bg-gray-300 active:scale-95"
+          >
+            Cancelar
+          </button>
+
           <button
             onClick={handleSave}
-            className="px-4 py-2 rounded-md bg-[#9F6C4D] text-white hover:bg-[#8e5b41]"
+            className="h-10 px-5 bg-[#9F6C4D] text-white rounded-lg text-sm shadow-md hover:bg-[#875B3F] active:scale-95"
           >
             Salvar
           </button>
+
+          <button
+            type="button"
+            onClick={() => setShowDeleteModal(true)}
+            className="h-10 px-4 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600 active:scale-95"
+          >
+            <Trash2 size={18} />
+          </button>
         </div>
 
-        <form className="flex flex-col gap-6">
+        {/* BLOCO 1 */}
+        <div className={blockClass}>
+          <p className={sectionTitle}>Informações Básicas</p>
+          <hr className="border-gray-300" />
 
-          <div className={sectionClass}>
-            <button
-              type="button"
-              onClick={() => toggleSection("basico")}
-              className="w-full flex justify-between items-center mb-4 text-left text-gray-700 font-semibold"
-            >
-              Informações Básicas
-              {openSections.basico ? <ChevronUp /> : <ChevronDown />}
-            </button>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
 
-            {openSections.basico && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <select
-                  className={`${inputClass} appearance-none`}
-                  value={pacienteId}
-                  onChange={(e) => setPacienteId(e.target.value)}
-                >
-                  <option value="">Selecione o Paciente *</option>
-                  {pacientes.map((p) => (
-                    <option key={p.id_paciente} value={p.id_paciente}>
-                      {p.nome}
-                    </option>
-                  ))}
-                </select>
+            {/* PACIENTE */}
+            <div className="flex flex-col">
+              <label className="text-sm text-gray-700 mb-1">Paciente</label>
+              <select
+                className={`${inputClass} h-12 ${errors.paciente ? "border-red-500" : "border-gray-200"}`}
+                value={pacienteId}
+                onChange={(e) => setPacienteId(e.target.value)}
+              >
+                <option value="">Selecione o Paciente</option>
+                {pacientes.map((p) => (
+                  <option key={p.id_paciente} value={p.id_paciente}>
+                    {p.nome}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-                <input
-                  type="date"
-                  className={inputClass}
-                  value={dataConsulta}
-                  onChange={(e) => setDataConsulta(e.target.value)}
-                />
+            {/* DATA */}
+            <div className="flex flex-col">
+              <label className="text-sm text-gray-700 mb-1">Data da Consulta</label>
+              <input
+                type="date"
+                className={`${inputClass} h-12 ${errors.dataConsulta ? "border-red-500" : "border-gray-200"}`}
+                value={dataConsulta}
+                onChange={(e) => setDataConsulta(e.target.value)}
+              />
+            </div>
 
-                <input
-                  type="time"
-                  className={inputClass}
-                  value={horaConsulta}
-                  onChange={(e) => setHoraConsulta(e.target.value)}
-                />
+            {/* HORA */}
+            <div className="flex flex-col">
+              <label className="text-sm text-gray-700 mb-1">Hora da Consulta</label>
+              <input
+                type="time"
+                className={`${inputClass} h-12 ${errors.horaConsulta ? "border-red-500" : "border-gray-200"}`}
+                value={horaConsulta}
+                onChange={(e) => setHoraConsulta(e.target.value)}
+              />
+            </div>
 
-                <input
-                  type="time"
-                  className={inputClass}
-                  value={duracaoTime}
-                  onChange={(e) => setDuracaoTime(e.target.value)}
-                />
+            {/* DURAÇÃO */}
+            <div className="flex flex-col">
+              <label className="text-sm text-gray-700 mb-1">Duração</label>
+              <input
+                type="time"
+                className={`${inputClass} h-12 ${errors.duracao ? "border-red-500" : "border-gray-200"}`}
+                value={duracao}
+                onChange={(e) => setDuracao(e.target.value)}
+              />
+            </div>
 
-                <select
-                  className={inputClass}
-                  value={tipo}
-                  onChange={(e) => setTipo(e.target.value)}
-                >
-                  <option value="">Selecione o Tipo *</option>
-                  <option value="presencial">Presencial</option>
-                  <option value="online">Online</option>
-                </select>
-              </div>
-            )}
+            {/* TIPO */}
+            <div className="flex flex-col">
+              <label className="text-sm text-gray-700 mb-1">Tipo</label>
+              <select
+                className={`
+    ${inputClass}
+    w-full py-2
+    border border-gray-200 rounded-lg
+    focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+    text-sm bg-white transition-all duration-200 appearance-none
+  `} value={tipo}
+                onChange={(e) => setTipo(e.target.value)}
+              >
+                <option value="">Selecione o Tipo</option>
+                <option value="presencial">Presencial</option>
+                <option value="online">Online</option>
+              </select>
+            </div>
           </div>
+        </div>
 
+        {/* BLOCO 2 */}
+        <div className={blockClass}>
+          <p className={sectionTitle}>Detalhes</p>
+          <hr className="border-gray-300" />
 
-          <div className={sectionClass}>
-            <button
-              type="button"
-              onClick={() => toggleSection("detalhes")}
-              className="w-full flex justify-between items-center mb-4 text-left text-gray-700 font-semibold"
-            >
-              Detalhes
-              {openSections.detalhes ? <ChevronUp /> : <ChevronDown />}
-            </button>
+          <div className="grid grid-cols-1 gap-4 mt-4">
 
-            {openSections.detalhes && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <textarea
-                  className={textareaClass}
-                  placeholder="Descrição"
-                  value={descricao}
-                  onChange={(e) => setDescricao(e.target.value)}
-                />
-                <textarea
-                  className={textareaClass}
-                  placeholder="Orientação / Conduta"
-                  value={orientacao}
-                  onChange={(e) => setOrientacao(e.target.value)}
-                />
-              </div>
-            )}
+            {/* DESCRIÇÃO */}
+            <div className="flex flex-col">
+              <label className="text-sm text-gray-700 mb-1">Descrição</label>
+              <textarea
+                className={`
+  ${inputClass}
+  w-full pr-9
+  border border-gray-200 rounded-lg
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+`} placeholder="Descrição"
+                value={descricao}
+                onChange={(e) => setDescricao(e.target.value)}
+              />
+            </div>
+
+            {/* ORIENTAÇÃO */}
+            <div className="flex flex-col">
+              <label className="text-sm text-gray-700 mb-1">Orientação / Conduta</label>
+              <textarea
+                className={`
+  ${inputClass}
+  w-full pr-9
+  border border-gray-200 rounded-lg
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+`} placeholder="Orientação / Conduta"
+                value={orientacao}
+                onChange={(e) => setOrientacao(e.target.value)}
+              />
+            </div>
+
           </div>
-        </form>
+        </div>
+
+        {showDeleteModal && <DeleteModal />}
       </main>
     </div>
   );
