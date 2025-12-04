@@ -5,6 +5,9 @@ import { ArrowLeft } from "lucide-react";
 import "react-toastify/dist/ReactToastify.css";
 import capa from "../assets/capa.jpeg";
 
+import { supabase } from "../lib/supabaseClient";
+
+
 export default function Login() {
   const [user, setUser] = useState("");
   const [password, setPassword] = useState("");
@@ -13,18 +16,36 @@ export default function Login() {
   const [showResetModal, setShowResetModal] = useState(false);
   const [resetEmail, setResetEmail] = useState("");
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if (user === "admin" && password === "teste123") {
-      toast.success("Login realizado com sucesso!", { autoClose: 2000 });
-      localStorage.setItem("user", user);
-      setTimeout(() => navigate("/dashboard"), 2100);
-    } else {
+
+    // Busca o admin do banco
+    const { data: admin, error } = await supabase
+      .from("configuracoes")
+      .select("*")
+      .eq("id", 1)
+      .single();
+
+    if (error || !admin) {
+      toast.error("Erro ao conectar. Tente novamente.");
+      return;
+    }
+
+    // Valida login
+    if (user !== admin.usuario || password !== admin.senha) {
       toast.error("Usuário ou senha incorretos", {
         position: "top-right",
         autoClose: 3000,
       });
+      return;
     }
+
+    // Login OK
+    toast.success("Login realizado com sucesso!", { autoClose: 2000 });
+
+    localStorage.setItem("user", admin.usuario);
+
+    setTimeout(() => navigate("/dashboard"), 2100);
   };
 
   const handleResetPassword = (e) => {

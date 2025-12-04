@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -11,10 +11,16 @@ import {
   ChevronRight,
 } from "lucide-react";
 import userPhoto from "../assets/userPhoto.png";
+import { supabase } from "../lib/supabaseClient";
 
 export default function Sidebar() {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(true);
+
+  const [nome, setNome] = useState("");
+  const [usuario, setUsuario] = useState("");
+  const [atuacao, setAtuacao] = useState("");
+
 
   const menuItems = [
     { name: "Dashboard", icon: <LayoutDashboard size={18} />, path: "/dashboard" },
@@ -24,6 +30,24 @@ export default function Sidebar() {
     { name: "Configurações", icon: <Settings size={18} />, path: "/configuracoes" },
   ];
 
+  useEffect(() => {
+    carregarUsuario();
+  }, []);
+
+  async function carregarUsuario() {
+    const { data, error } = await supabase
+      .from("configuracoes")
+      .select("*")
+      .eq("id", 1)
+      .single();
+
+    if (!error && data) {
+      setNome(data.nome);
+      setUsuario(data.usuario);
+      setAtuacao(data.atuacao);
+    }
+  }
+
   return (
     <aside
       className={`${
@@ -31,24 +55,26 @@ export default function Sidebar() {
       } bg-white border-r border-gray-100 text-gray-800 min-h-screen flex flex-col justify-between transition-all duration-200 ease-in-out`}
     >
       <div>
-        {/* Cabeçalho / Usuário */}
         <div
           className={`flex items-center justify-between px-4 py-5 border-b border-gray-100 ${
             !isOpen ? "flex-col gap-3 justify-center" : ""
           }`}
         >
-          <div className="flex items-center gap-3 justify-center w-full">
+          <div className="flex items-center gap-3 justify-start w-full">
             <img
               src={userPhoto}
               alt="Usuário"
-              className={`w-12 h-12 rounded-lg object-cover shadow-md transition-all duration-200`}
+              className="w-12 h-12 rounded-lg object-cover shadow-md transition-all duration-200"
             />
+
             {isOpen && (
               <div className="flex flex-col">
                 <h2 className="font-semibold text-gray-800 text-sm">
-                  Luana Feliciano
+                  {nome || "Carregando..."}
                 </h2>
-                <span className="text-xs text-gray-500">Psicóloga</span>
+                <span className="text-xs text-gray-500">
+                  { atuacao || "Atuação"}
+                </span>
               </div>
             )}
           </div>
@@ -65,7 +91,6 @@ export default function Sidebar() {
           </button>
         </div>
 
-        {/* Navegação */}
         <nav className="flex flex-col gap-1 mt-4 px-2">
           {menuItems.map((item) => {
             const isActive = location.pathname === item.path;
@@ -101,4 +126,3 @@ export default function Sidebar() {
     </aside>
   );
 }
-``

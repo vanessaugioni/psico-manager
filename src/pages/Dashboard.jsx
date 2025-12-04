@@ -121,7 +121,10 @@ export default function Dashboard() {
 
   return (
     <div className="flex min-h-screen bg-[#f8f8f8]">
-      <Sidebar />
+     <aside className="w-20 sm:w-64 h-screen sticky top-0 border-r border-gray-200 bg-white z-40 shadow-sm">
+  <Sidebar />
+</aside>
+
 
       <div className="flex-1 p-8">
         <header className="mb-8">

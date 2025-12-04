@@ -4,19 +4,16 @@ import { supabase } from "../lib/supabaseClient";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-export default function ConfiguracaoEdit() {
+export default function UsuarioEdit() {
   const [loading, setLoading] = useState(false);
 
-  const [foto, setFoto] = useState(null);
-  const [fotoPreview, setFotoPreview] = useState(null);
-  const [nomePsicologa, setNomePsicologa] = useState("");
-  const [emailNotificacao, setEmailNotificacao] = useState("");
+  const [nome, setNome] = useState("");
+  const [email, setEmail] = useState("");
+  const [usuario, setUsuario] = useState("");
+  const [senha, setSenha] = useState("");
+  const [mostrarSenha, setMostrarSenha] = useState(false);
+  const [atuacao, setAtuacao] = useState("");
 
-  const [novoEmailLogin, setNovoEmailLogin] = useState("");
-  const [novaSenha, setNovaSenha] = useState("");
-
-  const [inicioExpediente, setInicioExpediente] = useState("08:00");
-  const [fimExpediente, setFimExpediente] = useState("18:00");
 
   const [avisarPorEmail, setAvisarPorEmail] = useState(false);
   const [lembrete24h, setLembrete24h] = useState(false);
@@ -31,75 +28,79 @@ export default function ConfiguracaoEdit() {
   const sectionTitle = "text-lg font-semibold text-gray-800";
 
   useEffect(() => {
-    async function fetchConfig() {
-      const { data } = await supabase.from("configuracoes").select("*").single();
-
-      if (data) {
-        setNomePsicologa(data.nome_psicologa || "");
-        setEmailNotificacao(data.email_notificacao || "");
-        setInicioExpediente(data.inicio_expediente || "08:00");
-        setFimExpediente(data.fim_expediente || "18:00");
-        setAvisarPorEmail(data.avisar_email || false);
-        setLembrete24h(data.lembrete_24h || false);
-        setLembrete1h(data.lembrete_1h || false);
-        setFotoPreview(data.foto_url || null);
-      }
-    }
-    fetchConfig();
+    carregarAdmin();
   }, []);
 
-  async function uploadFoto() {
-    if (!foto) return fotoPreview;
+  async function carregarAdmin() {
+    const { data, error } = await supabase
+      .from("configuracoes")
+      .select("*")
+      .eq("id", 1)
+      .single();
 
-    const fileName = `psicologa_${Date.now()}`;
-    const { error } = await supabase.storage.from("avatars").upload(fileName, foto);
-
-    if (error) {
-      toast.error("Erro ao enviar foto.");
-      return fotoPreview;
+    if (error && error.code !== "PGRST116") {
+      console.log(error);
+      toast.error("Erro ao carregar dados.");
+      return;
     }
 
-    return supabase.storage.from("avatars").getPublicUrl(fileName).data.publicUrl;
+    // Se registro não existe → criar automaticamente
+    if (!data) {
+      await supabase
+        .from("configuracoes")
+        .insert({ id: 1, nome: "Admin", usuario: "admin", senha: "hash" });
+
+      return carregarAdmin(); // puxa novamente
+    }
+
+    setNome(data.nome);
+    setEmail(data.email);
+    setUsuario(data.usuario);
+    setAtuacao(data.atuacao);
+    setAvisarPorEmail(data.avisar_por_email);
+    setLembrete24h(data.lembrete_24h);
+    setLembrete1h(data.lembrete_1h);
   }
 
   async function salvar() {
     setLoading(true);
 
-    const fotoUrl = await uploadFoto();
-
-    const { error } = await supabase.from("configuracoes").upsert(
-      {
-        id: 1,
-        nome_psicologa: nomePsicologa,
-        email_notificacao: emailNotificacao,
-        inicio_expediente: inicioExpediente,
-        fim_expediente: fimExpediente,
-        avisar_email: avisarPorEmail,
-        lembrete_24h: lembrete24h,
+    const { error } = await supabase
+      .from("configuracoes")
+      .update({
+        nome,
+        email,
+        usuario,
+        senha,
+        atuacao,
+        avisar_por_email: avisarPorEmail,
         lembrete_1h: lembrete1h,
-        foto_url: fotoUrl,
-      },
-      { onConflict: "id" }
-    );
+        lembrete_24h: lembrete24h,
+      })
+      .eq("id", 1);
 
-    if (!error) toast.success("Configurações atualizadas!");
-    else toast.error("Erro ao salvar.");
+    if (error) {
+      toast.error("Erro ao salvar.");
+      console.log(error);
+    } else {
+      toast.success("Configurações atualizadas!");
+    }
 
     setLoading(false);
   }
 
   async function atualizarLogin() {
-    if (novoEmailLogin) {
-      const { error } = await supabase.auth.updateUser({ email: novoEmailLogin });
+    if (email) {
+      const { error } = await supabase.auth.updateUser({ email });
       if (error) return toast.error("Erro ao atualizar email.");
     }
 
-    if (novaSenha) {
-      const { error } = await supabase.auth.updateUser({ password: novaSenha });
+    if (senha) {
+      const { error } = await supabase.auth.updateUser({ password: senha });
       if (error) return toast.error("Erro ao atualizar senha.");
     }
 
-    toast.success("Login atualizado!");
+    toast.success("Dados de login atualizados!");
   }
 
   return (
@@ -114,97 +115,98 @@ export default function ConfiguracaoEdit() {
         <header className="mb-4">
           <h1 className="text-3xl font-bold text-gray-800 mb-1">Configurações</h1>
           <p className="text-gray-500 text-sm">
-            Personalize informações, horários e preferências da plataforma.
+            Personalize seu perfil e preferências da plataforma.
           </p>
         </header>
 
-        {/* BOTÕES SUPERIORES */}
         <div className="flex gap-3 mb-6 justify-end">
           <button
             onClick={() => window.history.back()}
-            className="
-              h-10 px-5 flex items-center justify-center gap-2
-              text-[#4A3F39] bg-gray-200 rounded-lg shadow-md
-              transition-all duration-300 font-normal text-sm
-              hover:bg-gray-300 hover:shadow-lg active:scale-[0.97]
-            "
+            className="h-10 px-5 flex items-center justify-center gap-2
+                       text-[#4A3F39] bg-gray-200 rounded-lg shadow-md
+                       transition-all duration-300 font-normal text-sm
+                       hover:bg-gray-300 hover:shadow-lg active:scale-[0.97]"
           >
             Cancelar
           </button>
 
           <button
             onClick={salvar}
-            className="
-              h-10 px-5 flex items-center justify-center gap-2
-              bg-[#9F6C4D] text-white rounded-lg shadow-md
-              font-normal text-sm transition-all duration-300
-              hover:bg-[#875B3F] hover:shadow-lg active:scale-[0.97]
-            "
+            className="h-10 px-5 flex items-center justify-center gap-2
+                       bg-[#9F6C4D] text-white rounded-lg shadow-md
+                       font-normal text-sm transition-all duration-300
+                       hover:bg-[#875B3F] hover:shadow-lg active:scale-[0.97]"
           >
             Salvar
           </button>
         </div>
 
         <section className={blockClass}>
-          <p className={sectionTitle}>Perfil da Psicóloga</p>
+          <p className={sectionTitle}>Dados Pessoais</p>
           <hr className="border-gray-300" />
-
-          {/* <div className="flex items-center gap-6">
-            {fotoPreview ? (
-              <img
-                src={fotoPreview}
-                alt="Foto"
-                className="w-24 h-24 rounded-full object-cover border"
-              />
-            ) : (
-              <div className="w-24 h-24 rounded-full bg-gray-100 flex items-center justify-center border">
-                <span className="text-gray-400 text-sm">Sem foto</span>
-              </div>
-            )}
-
-            <div className="flex-1">
-              <label className="text-sm text-gray-700 mb-1 block">Foto da Psicóloga</label>
-              <input
-                type="file"
-                className="text-sm"
-                onChange={(e) => {
-                  setFoto(e.target.files[0]);
-                  setFotoPreview(URL.createObjectURL(e.target.files[0]));
-                }}
-              />
-            </div>
-          </div> */}
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
             <div>
               <label className="text-sm text-gray-700 mb-1 block">Nome</label>
               <input
-                className={inputClass}
-                value={nomePsicologa}
-                onChange={(e) => setNomePsicologa(e.target.value)}
+className={`
+    ${inputClass}
+    w-full h-10 py-2
+    border border-gray-200 rounded-lg
+    focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+    text-sm bg-white transition-all duration-200 appearance-none
+  `}                value={nome}
+                onChange={(e) => setNome(e.target.value)}
               />
             </div>
 
             <div>
-              <label className="text-sm text-gray-700 mb-1 block">Email de Notificação</label>
+              <label className="text-sm text-gray-700 mb-1 block">Email</label>
               <input
-                className={inputClass}
-                value={emailNotificacao}
-                onChange={(e) => setEmailNotificacao(e.target.value)}
+className={`
+    ${inputClass}
+    w-full h-10 py-2
+    border border-gray-200 rounded-lg
+    focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+    text-sm bg-white transition-all duration-200 appearance-none
+  `}                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
+
+            <div>
+              <label className="text-sm text-gray-700 mb-1 block">Atuação:</label>
+              <input
+className={`
+    ${inputClass}
+    w-full h-10 py-2
+    border border-gray-200 rounded-lg
+    focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+    text-sm bg-white transition-all duration-200 appearance-none
+  `}                value={atuacao}
+                onChange={(e) => setAtuacao(e.target.value)}
+                placeholder="Ex: Psicóloga, Nutricionista..."
+              />
+            </div>
+
+
           </div>
 
-          <p className={sectionTitle + " pt-4"}>Dados de Login</p>
+          <p className={sectionTitle + " pt-4"}>Login</p>
           <hr className="border-gray-300" />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="text-sm text-gray-700 mb-1 block">Novo Email</label>
+              <label className="text-sm text-gray-700 mb-1 block">Usuário</label>
               <input
-                className={inputClass}
-                value={novoEmailLogin}
-                onChange={(e) => setNovoEmailLogin(e.target.value)}
+className={`
+    ${inputClass}
+    w-full h-10 py-2
+    border border-gray-200 rounded-lg
+    focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+    text-sm bg-white transition-all duration-200 appearance-none
+  `}                value={usuario}
+                onChange={(e) => setUsuario(e.target.value)}
               />
             </div>
 
@@ -212,39 +214,22 @@ export default function ConfiguracaoEdit() {
               <label className="text-sm text-gray-700 mb-1 block">Nova Senha</label>
               <input
                 type="password"
-                className={inputClass}
-                value={novaSenha}
-                onChange={(e) => setNovaSenha(e.target.value)}
+className={`
+    ${inputClass}
+    w-full h-10 py-2
+    border border-gray-200 rounded-lg
+    focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+    text-sm bg-white transition-all duration-200 appearance-none
+  `}                value={senha}
+                onChange={(e) => setSenha(e.target.value)}
               />
             </div>
-
-          
           </div>
 
-          <p className={sectionTitle + " pt-4"}>Horários e Avisos</p>
+          <p className={sectionTitle + " pt-4"}>Preferências</p>
           <hr className="border-gray-300" />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="text-sm text-gray-700 mb-1 block">Início do Expediente</label>
-              <input
-                type="time"
-                className={inputClass}
-                value={inicioExpediente}
-                onChange={(e) => setInicioExpediente(e.target.value)}
-              />
-            </div>
-
-            <div>
-              <label className="text-sm text-gray-700 mb-1 block">Fim do Expediente</label>
-              <input
-                type="time"
-                className={inputClass}
-                value={fimExpediente}
-                onChange={(e) => setFimExpediente(e.target.value)}
-              />
-            </div>
-
             <label className="flex items-center gap-3 col-span-2 text-sm text-gray-700">
               <input
                 type="checkbox"
