@@ -177,6 +177,7 @@ export default function ConsultasList() {
                 left: "prev,next today",
                 center: "title",
                 right: "dayGridMonth,timeGridWeek,timeGridDay",
+                label:"hoje"
               }}
             />
           </div>

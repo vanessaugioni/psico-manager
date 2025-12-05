@@ -114,7 +114,7 @@ export default function ProntuarioForm() {
 
         if (error) {
             console.log(error);
-            toast.error("Erro ao salvar o prontuário");
+            toast.error("Já existe um prontuário para esse paciente!");
             return;
         }
 
@@ -142,24 +142,48 @@ export default function ProntuarioForm() {
                     </p>
                 </header>
 
-                <div className="flex justify-end gap-2 mb-6">
+                <div className="flex gap-3 mb-6 justify-end">
                     <button
                         onClick={handleCancel}
-                        className="px-4 py-2 rounded-md bg-gray-200 hover:bg-gray-300"
+                        className="
+            h-10 px-5
+            flex items-center justify-center gap-2 text-[#4A3F39]
+            rounded-lg
+            font-normal text-sm
+            shadow-md
+            transition-all duration-300
+            hover:bg-gray-300
+            hover:shadow-lg
+            active:scale-[0.97]
+            bg-gray-200
+        "
                     >
                         Cancelar
                     </button>
 
                     <button
                         onClick={handleSave}
-                        className="px-4 py-2 rounded-md bg-[#9F6C4D] text-white hover:bg-[#8e5b41]"
+                        className="
+            h-10 px-5
+            flex items-center justify-center gap-2
+            bg-[#9F6C4D] text-white
+            rounded-lg 
+            font-normal text-sm
+            shadow-md
+            transition-all duration-300
+            hover:bg-[#875B3F]
+            hover:shadow-lg
+            active:scale-[0.97]
+        "
                     >
                         Salvar
                     </button>
                 </div>
 
+
                 <form className="flex flex-col gap-6">
                     <div className={sectionClass}>
+
                         <button
                             type="button"
                             onClick={() => toggleSection("basico")}
@@ -169,54 +193,79 @@ export default function ProntuarioForm() {
                             {openSections.basico ? <ChevronUp /> : <ChevronDown />}
                         </button>
 
+                        <hr className="border-gray-300" />
+
                         {openSections.basico && (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <select
-                                    className={`${inputClass}, appearance-none`}
-                                    value={pacienteId}
-                                    onChange={(e) => setPacienteId(e.target.value)}
-                                >
-                                    <option value="">Selecione o Paciente *</option>
-                                    {pacientes.map((p) => (
-                                        <option key={p.id_paciente} value={p.id_paciente}>
-                                            {p.nome}
-                                        </option>
-                                    ))}
-                                </select>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
 
-                                <select
-                                    className={`${inputClass}, appearance-none`}
-                                    value={situacaoId}
-                                    onChange={(e) => setSituacaoId(e.target.value)}
-                                >
-                                    <option value="">Situação *</option>
-                                    {situacoes.map((s) => (
-                                        <option key={s.id} value={s.id}>
-                                            {s.descricao}
-                                        </option>
-                                    ))}
-                                </select>
+                                <div className="flex flex-col">
+                                    <label className="text-sm font-medium text-gray-700 mb-1">
+                                        Paciente: *
+                                    </label>
+                                    <select
+                                        className={`${inputClass} h-12 py-2 appearance-none border-gray-200`}
+                                        value={pacienteId}
+                                        onChange={(e) => setPacienteId(e.target.value)}
+                                    >
+                                        <option value=""></option>
+                                        {pacientes.map((p) => (
+                                            <option key={p.id_paciente} value={p.id_paciente}>
+                                                {p.nome}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
 
-                                <textarea
-                                    className={textareaClass}
-                                    placeholder="Motivo da Consulta *"
-                                    value={motivoConsulta}
-                                    onChange={(e) => setMotivoConsulta(e.target.value)}
-                                />
+                                <div className="flex flex-col">
+                                    <label className="text-sm font-medium text-gray-700 mb-1">
+                                        Situação: *
+                                    </label>
+                                    <select
+                                        className={`${inputClass} h-12 py-2 appearance-none border-gray-200`}
+                                        value={situacaoId}
+                                        onChange={(e) => setSituacaoId(e.target.value)}
+                                    >
+                                        <option value=""></option>
+                                        {situacoes.map((s) => (
+                                            <option key={s.id} value={s.id}>
+                                                {s.descricao}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
 
-                                <textarea
-                                    className={textareaClass}
-                                    placeholder="Relato do Paciente"
-                                    value={relato}
-                                    onChange={(e) => setRelato(e.target.value)}
-                                />
+                                <div className="flex flex-col">
+                                    <label className="text-sm font-medium text-gray-700 mb-1">
+                                        Motivo da Consulta: *
+                                    </label>
+                                    <textarea
+                                        className={`${textareaClass} h-24`}
+                                        value={motivoConsulta}
+                                        onChange={(e) => setMotivoConsulta(e.target.value)}
+                                    />
+                                </div>
 
-                                <textarea
-                                    className={textareaClass}
-                                    placeholder="Queixa Principal"
-                                    value={queixa}
-                                    onChange={(e) => setQueixa(e.target.value)}
-                                />
+                                <div className="flex flex-col">
+                                    <label className="text-sm font-medium text-gray-700 mb-1">
+                                        Relato do Paciente:
+                                    </label>
+                                    <textarea
+                                        className={`${textareaClass} h-24`}
+                                        value={relato}
+                                        onChange={(e) => setRelato(e.target.value)}
+                                    />
+                                </div>
+
+                                <div className="flex flex-col">
+                                    <label className="text-sm font-medium text-gray-700 mb-1">
+                                        Queixa Principal:
+                                    </label>
+                                    <textarea
+                                        className={`${textareaClass} h-24`}
+                                        value={queixa}
+                                        onChange={(e) => setQueixa(e.target.value)}
+                                    />
+                                </div>
                             </div>
                         )}
                     </div>
@@ -231,133 +280,240 @@ export default function ProntuarioForm() {
                             {openSections.historico ? <ChevronUp /> : <ChevronDown />}
                         </button>
 
+                        <hr className="border-gray-300" />
+
+
                         {openSections.historico && (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <textarea
-                                    className={textareaClass}
-                                    placeholder="Resumo de Vida"
-                                    value={resumoVida}
-                                    onChange={(e) => setResumoVida(e.target.value)}
-                                />
-                                <textarea
-                                    className={textareaClass}
-                                    placeholder="Comorbidades"
-                                    value={comorbidades}
-                                    onChange={(e) => setComorbidades(e.target.value)}
-                                />
-                                <textarea
-                                    className={textareaClass}
-                                    placeholder="Alergias"
-                                    value={alergias}
-                                    onChange={(e) => setAlergias(e.target.value)}
-                                />
-                                <textarea
-                                    className={textareaClass}
-                                    placeholder="Histórico Familiar"
-                                    value={histFamiliar}
-                                    onChange={(e) => setHistFamiliar(e.target.value)}
-                                />
-                                <textarea
-                                    className={textareaClass}
-                                    placeholder="Histórico Médico"
-                                    value={histMedico}
-                                    onChange={(e) => setHistMedico(e.target.value)}
-                                />
-                                <textarea
-                                    className={textareaClass}
-                                    placeholder="Medicações"
-                                    value={medicacoes}
-                                    onChange={(e) => setMedicacoes(e.target.value)}
-                                />
-                                <textarea
-                                    className={textareaClass}
-                                    placeholder="Sono"
-                                    value={sono}
-                                    onChange={(e) => setSono(e.target.value)}
-                                />
-                                <textarea
-                                    className={textareaClass}
-                                    placeholder="Alimentação"
-                                    value={alimentacao}
-                                    onChange={(e) => setAlimentacao(e.target.value)}
-                                />
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
 
-                                <textarea
-                                    className={textareaClass}
-                                    placeholder="Histórico Psicossocial"
-                                    value={histPsico}
-                                    onChange={(e) => setHistPsico(e.target.value)}
-                                />
-                                <textarea
-                                    className={textareaClass}
-                                    placeholder="Interação Social"
-                                    value={interacaoSocial}
-                                    onChange={(e) => setInteracaoSocial(e.target.value)}
-                                />
-                                <textarea
-                                    className={textareaClass}
-                                    placeholder="Violência"
-                                    value={violencia}
-                                    onChange={(e) => setViolencia(e.target.value)}
-                                />
-                                <textarea
-                                    className={textareaClass}
-                                    placeholder="Delírios / Alucinações"
-                                    value={delirios}
-                                    onChange={(e) => setDelirios(e.target.value)}
-                                />
-                                <textarea
-                                    className={textareaClass}
-                                    placeholder="Atividade Física"
-                                    value={atividadeFisica}
-                                    onChange={(e) => setAtividadeFisica(e.target.value)}
-                                />
-                                <textarea
-                                    className={textareaClass}
-                                    placeholder="Hobbies"
-                                    value={hobbies}
-                                    onChange={(e) => setHobbies(e.target.value)}
-                                />
-                                <textarea
-                                    className={textareaClass}
-                                    placeholder="Manias / TOC"
-                                    value={manias}
-                                    onChange={(e) => setManias(e.target.value)}
-                                />
-                                <textarea
-                                    className={textareaClass}
-                                    placeholder="Pensamentos Intrusivos"
-                                    value={pensamentos}
-                                    onChange={(e) => setPensamentos(e.target.value)}
-                                />
-                                <textarea
-                                    className={textareaClass}
-                                    placeholder="Vícios"
-                                    value={vicios}
-                                    onChange={(e) => setVicios(e.target.value)}
-                                />
-                                <textarea
-                                    className={textareaClass}
-                                    placeholder="Sintomas"
-                                    value={sintomas}
-                                    onChange={(e) => setSintomas(e.target.value)}
-                                />
+                                <div className="flex flex-col">
+                                    <label className="text-sm font-medium text-gray-700 mb-1">
+                                        Resumo de Vida:
+                                    </label>
+                                    <textarea
+                                        className={`
+  w-full pr-9 h-10
+  border rounded-lg 
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+  ${textareaClass}
+  ${errors.fullName ? "border-red-500" : "border-gray-200"}
+`} value={resumoVida}
+                                        onChange={(e) => setResumoVida(e.target.value)}
+                                    />
+                                </div>
 
-                                <textarea
-                                    className={`${textareaClass} h-32`}
-                                    placeholder="Plano Terapêutico"
-                                    value={plano}
-                                    onChange={(e) => setPlano(e.target.value)}
-                                />
-                                <textarea
-                                    className={`${textareaClass} h-32`}
-                                    placeholder="Estado Atual"
-                                    value={estadoAtual}
-                                    onChange={(e) => setEstadoAtual(e.target.value)}
-                                />
+                                <div className="flex flex-col">
+                                    <label className="text-sm font-medium text-gray-700 mb-1">
+                                        Comorbidades:
+                                    </label>
+                                    <textarea
+                                        className={textareaClass}
+                                        value={comorbidades}
+                                        onChange={(e) => setComorbidades(e.target.value)}
+                                    />
+                                </div>
 
+                                <div className="flex flex-col">
+                                    <label className="text-sm font-medium text-gray-700 mb-1">
+                                        Alergias:
+                                    </label>
+                                    <textarea
+                                        className={textareaClass}
+                                        value={alergias}
+                                        onChange={(e) => setAlergias(e.target.value)}
+                                    />
+                                </div>
+
+                                <div className="flex flex-col">
+                                    <label className="text-sm font-medium text-gray-700 mb-1">
+                                        Histórico Familiar:
+                                    </label>
+                                    <textarea
+                                        className={textareaClass}
+                                        value={histFamiliar}
+                                        onChange={(e) => setHistFamiliar(e.target.value)}
+                                    />
+                                </div>
+
+                                <div className="flex flex-col">
+                                    <label className="text-sm font-medium text-gray-700 mb-1">
+                                        Histórico Médico:
+                                    </label>
+                                    <textarea
+                                        className={textareaClass}
+                                        value={histMedico}
+                                        onChange={(e) => setHistMedico(e.target.value)}
+                                    />
+                                </div>
+
+                                <div className="flex flex-col">
+                                    <label className="text-sm font-medium text-gray-700 mb-1">
+                                        Medicações:
+                                    </label>
+                                    <textarea
+                                        className={textareaClass}
+                                        value={medicacoes}
+                                        onChange={(e) => setMedicacoes(e.target.value)}
+                                    />
+                                </div>
+
+                                <div className="flex flex-col">
+                                    <label className="text-sm font-medium text-gray-700 mb-1">
+                                        Sono:
+                                    </label>
+                                    <textarea
+                                        className={textareaClass}
+                                        value={sono}
+                                        onChange={(e) => setSono(e.target.value)}
+                                    />
+                                </div>
+
+                                <div className="flex flex-col">
+                                    <label className="text-sm font-medium text-gray-700 mb-1">
+                                        Alimentação:
+                                    </label>
+                                    <textarea
+                                        className={textareaClass}
+                                        value={alimentacao}
+                                        onChange={(e) => setAlimentacao(e.target.value)}
+                                    />
+                                </div>
+
+                                <div className="flex flex-col">
+                                    <label className="text-sm font-medium text-gray-700 mb-1">
+                                        Histórico Psicossocial:
+                                    </label>
+                                    <textarea
+                                        className={textareaClass}
+                                        value={histPsico}
+                                        onChange={(e) => setHistPsico(e.target.value)}
+                                    />
+                                </div>
+
+                                <div className="flex flex-col">
+                                    <label className="text-sm font-medium text-gray-700 mb-1">
+                                        Interação Social:
+                                    </label>
+                                    <textarea
+                                        className={textareaClass}
+                                        value={interacaoSocial}
+                                        onChange={(e) => setInteracaoSocial(e.target.value)}
+                                    />
+                                </div>
+
+                                <div className="flex flex-col">
+                                    <label className="text-sm font-medium text-gray-700 mb-1">
+                                        Violência:
+                                    </label>
+                                    <textarea
+                                        className={textareaClass}
+                                        value={violencia}
+                                        onChange={(e) => setViolencia(e.target.value)}
+                                    />
+                                </div>
+
+                                <div className="flex flex-col">
+                                    <label className="text-sm font-medium text-gray-700 mb-1">
+                                        Delírios / Alucinações:
+                                    </label>
+                                    <textarea
+                                        className={textareaClass}
+                                        value={delirios}
+                                        onChange={(e) => setDelirios(e.target.value)}
+                                    />
+                                </div>
+
+                                <div className="flex flex-col">
+                                    <label className="text-sm font-medium text-gray-700 mb-1">
+                                        Atividade Física:
+                                    </label>
+                                    <textarea
+                                        className={textareaClass}
+                                        value={atividadeFisica}
+                                        onChange={(e) => setAtividadeFisica(e.target.value)}
+                                    />
+                                </div>
+
+                                <div className="flex flex-col">
+                                    <label className="text-sm font-medium text-gray-700 mb-1">
+                                        Hobbies:
+                                    </label>
+                                    <textarea
+                                        className={textareaClass}
+                                        value={hobbies}
+                                        onChange={(e) => setHobbies(e.target.value)}
+                                    />
+                                </div>
+
+                                <div className="flex flex-col">
+                                    <label className="text-sm font-medium text-gray-700 mb-1">
+                                        Manias / TOC:
+                                    </label>
+                                    <textarea
+                                        className={textareaClass}
+                                        value={manias}
+                                        onChange={(e) => setManias(e.target.value)}
+                                    />
+                                </div>
+
+                                <div className="flex flex-col">
+                                    <label className="text-sm font-medium text-gray-700 mb-1">
+                                        Pensamentos Intrusivos:
+                                    </label>
+                                    <textarea
+                                        className={textareaClass}
+                                        value={pensamentos}
+                                        onChange={(e) => setPensamentos(e.target.value)}
+                                    />
+                                </div>
+
+                                <div className="flex flex-col">
+                                    <label className="text-sm font-medium text-gray-700 mb-1">
+                                        Vícios:
+                                    </label>
+                                    <textarea
+                                        className={textareaClass}
+                                        value={vicios}
+                                        onChange={(e) => setVicios(e.target.value)}
+                                    />
+                                </div>
+
+                                <div className="flex flex-col">
+                                    <label className="text-sm font-medium text-gray-700 mb-1">
+                                        Sintomas:
+                                    </label>
+                                    <textarea
+                                        className={textareaClass}
+                                        value={sintomas}
+                                        onChange={(e) => setSintomas(e.target.value)}
+                                    />
+                                </div>
+
+                                <div className="flex flex-col">
+                                    <label className="text-sm font-medium text-gray-700 mb-1">
+                                        Plano Terapêutico:
+                                    </label>
+                                    <textarea
+                                        className={`${textareaClass} h-32`}
+                                        value={plano}
+                                        onChange={(e) => setPlano(e.target.value)}
+                                    />
+                                </div>
+
+                                <div className="flex flex-col">
+                                    <label className="text-sm font-medium text-gray-700 mb-1">
+                                        Estado Atual:
+                                    </label>
+                                    <textarea
+                                        className={`${textareaClass} h-32`}
+                                        value={estadoAtual}
+                                        onChange={(e) => setEstadoAtual(e.target.value)}
+                                    />
+                                </div>
 
                             </div>
+
                         )}
                     </div>
                 </form>

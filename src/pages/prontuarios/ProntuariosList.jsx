@@ -49,7 +49,7 @@ export default function ProntuariosList() {
 
     const handlePrevPage = () => setCurrentPage((p) => Math.max(p - 1, 1));
     const handleNextPage = () => setCurrentPage((p) => Math.min(p + 1, totalPages));
-    const handleNovo = () => navigate("/prontuarioForm");
+    const handleNovo = () => navigate("/prontuario/novo");
     const handleEditar = (id) => navigate(`/prontuario/edit/${id}`);
 
     return (

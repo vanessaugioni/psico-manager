@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import { Facebook, Instagram, Mail, MessageCircle, MapPinned } from "lucide-react";
 import Slider from "react-slick";
-import banner from "../assets/banner.png";
+import banner from "../assets/banner.svg";
+import logo from "../assets/logo.svg";
 import feedback1 from "../assets/feedback1.png";
 import feedback2 from "../assets/feedback2.png";
 import fotoLuana from "../assets/luana.png";
@@ -27,10 +28,10 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen flex flex-col bg-[#9F6C4D] text-white overflow-x-hidden font-[Inter] transition-colors duration-300 ease-in-out">
 
-      <header className="flex justify-between items-center px-10 py-6 bg-[#8C5F44]/40 border-b border-white/20 backdrop-blur-lg sticky top-0 z-50 transition-all duration-300 relative">
+      <header className="flex justify-between items-center px-10  bg-[#8C5F44]/40 border-b border-white/20 backdrop-blur-lg sticky top-0 z-50 transition-all duration-300 relative">
 
         <div className="flex space-x-5">
-          {[
+          {/* {[
             {
               icon: Instagram,
               href: "https://www.instagram.com/psicologaluanafeliciano?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==",
@@ -46,7 +47,15 @@ export default function LandingPage() {
             >
               <Icon size={22} className="text-white" />
             </a>
-          ))}
+          ))} */}
+
+
+          <img
+            src={logo}
+            alt="Luana Feliciano"
+            className=" w-20 h-20 hover:bg-white/10 rounded-full transition-all duration-300 ease-in-out"
+          />
+
         </div>
 
 
@@ -68,23 +77,33 @@ export default function LandingPage() {
           ))}
         </nav>
 
+
+
         <Link
           to="/login"
           className="bg-white text-[#9F6C4D] px-5 py-3 rounded-xl font-medium shadow-md border border-[#C8A38D] hover:bg-[#8C5F44] hover:text-white transition-all duration-300"
         >
           Login
         </Link>
+
+        {/* {[
+            {
+              icon: Instagram,
+              href: "https://www.instagram.com/psicologaluanafeliciano?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==",
+            },
+            { icon: Mail, href: "mailto:contato@luanafeliciano.com" },
+          ].map(({ icon: Icon, href }, idx) => (
+            <a
+              key={idx}
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-3 hover:bg-white/10 border border-[#C8A38D]/40 rounded-full transition-all duration-300 ease-in-out"
+            >
+              <Icon size={22} className="text-white" />
+            </a>
+          ))} */}
       </header>
-
-      <section className="flex flex-col justify-center items-center text-center px-6 py-16 bg-[#9F6C4D] transition-all duration-500">
-
-        <h2 className="text-3xl md:text-4xl font-bold mb-4 tracking-wide">
-          Psicóloga Luana Feliciano
-        </h2>
-        <p className="max-w-2xl text-base md:text-lg text-gray-100/90 mb-8 leading-relaxed">
-          Especialista em Psicologia Hospitalar e da Saúde        </p>
-      </section>
-
 
       <section className="w-screen relative">
         <img
