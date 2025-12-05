@@ -284,7 +284,7 @@ export default function ProntuarioForm() {
 
 
                         {openSections.historico && (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                            <div className="grid grid-cols-1  gap-4 mt-4">
 
                                 <div className="flex flex-col">
                                     <label className="text-sm font-medium text-gray-700 mb-1">
@@ -292,13 +292,12 @@ export default function ProntuarioForm() {
                                     </label>
                                     <textarea
                                         className={`
-  w-full pr-9 h-10
-  border rounded-lg 
+  ${inputClass}
+  w-full pr-9
+  border border-gray-200 rounded-lg
   focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
   text-sm bg-white transition-all duration-200
-  ${textareaClass}
-  ${errors.fullName ? "border-red-500" : "border-gray-200"}
-`} value={resumoVida}
+`}
                                         onChange={(e) => setResumoVida(e.target.value)}
                                     />
                                 </div>
@@ -308,7 +307,13 @@ export default function ProntuarioForm() {
                                         Comorbidades:
                                     </label>
                                     <textarea
-                                        className={textareaClass}
+                                        className={`
+  ${inputClass}
+  w-full pr-9
+  border border-gray-200 rounded-lg
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+`}
                                         value={comorbidades}
                                         onChange={(e) => setComorbidades(e.target.value)}
                                     />
@@ -319,7 +324,13 @@ export default function ProntuarioForm() {
                                         Alergias:
                                     </label>
                                     <textarea
-                                        className={textareaClass}
+                                        className={`
+  ${inputClass}
+  w-full pr-9
+  border border-gray-200 rounded-lg
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+`}
                                         value={alergias}
                                         onChange={(e) => setAlergias(e.target.value)}
                                     />
@@ -330,8 +341,13 @@ export default function ProntuarioForm() {
                                         Histórico Familiar:
                                     </label>
                                     <textarea
-                                        className={textareaClass}
-                                        value={histFamiliar}
+                                        className={`
+  ${inputClass}
+  w-full pr-9
+  border border-gray-200 rounded-lg
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+`} value={histFamiliar}
                                         onChange={(e) => setHistFamiliar(e.target.value)}
                                     />
                                 </div>
@@ -341,8 +357,13 @@ export default function ProntuarioForm() {
                                         Histórico Médico:
                                     </label>
                                     <textarea
-                                        className={textareaClass}
-                                        value={histMedico}
+                                        className={`
+  ${inputClass}
+  w-full pr-9
+  border border-gray-200 rounded-lg
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+`} value={histMedico}
                                         onChange={(e) => setHistMedico(e.target.value)}
                                     />
                                 </div>
@@ -352,8 +373,13 @@ export default function ProntuarioForm() {
                                         Medicações:
                                     </label>
                                     <textarea
-                                        className={textareaClass}
-                                        value={medicacoes}
+                                        className={`
+  ${inputClass}
+  w-full pr-9
+  border border-gray-200 rounded-lg
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+`} value={medicacoes}
                                         onChange={(e) => setMedicacoes(e.target.value)}
                                     />
                                 </div>
@@ -363,8 +389,13 @@ export default function ProntuarioForm() {
                                         Sono:
                                     </label>
                                     <textarea
-                                        className={textareaClass}
-                                        value={sono}
+                                        className={`
+  ${inputClass}
+  w-full pr-9
+  border border-gray-200 rounded-lg
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+`} value={sono}
                                         onChange={(e) => setSono(e.target.value)}
                                     />
                                 </div>
@@ -374,8 +405,13 @@ export default function ProntuarioForm() {
                                         Alimentação:
                                     </label>
                                     <textarea
-                                        className={textareaClass}
-                                        value={alimentacao}
+                                        className={`
+  ${inputClass}
+  w-full pr-9
+  border border-gray-200 rounded-lg
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+`} value={alimentacao}
                                         onChange={(e) => setAlimentacao(e.target.value)}
                                     />
                                 </div>
@@ -385,8 +421,13 @@ export default function ProntuarioForm() {
                                         Histórico Psicossocial:
                                     </label>
                                     <textarea
-                                        className={textareaClass}
-                                        value={histPsico}
+                                        className={`
+  ${inputClass}
+  w-full pr-9
+  border border-gray-200 rounded-lg
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+`} value={histPsico}
                                         onChange={(e) => setHistPsico(e.target.value)}
                                     />
                                 </div>
@@ -396,8 +437,13 @@ export default function ProntuarioForm() {
                                         Interação Social:
                                     </label>
                                     <textarea
-                                        className={textareaClass}
-                                        value={interacaoSocial}
+                                        className={`
+  ${inputClass}
+  w-full pr-9
+  border border-gray-200 rounded-lg
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+`} value={interacaoSocial}
                                         onChange={(e) => setInteracaoSocial(e.target.value)}
                                     />
                                 </div>
@@ -407,8 +453,13 @@ export default function ProntuarioForm() {
                                         Violência:
                                     </label>
                                     <textarea
-                                        className={textareaClass}
-                                        value={violencia}
+                                        className={`
+  ${inputClass}
+  w-full pr-9
+  border border-gray-200 rounded-lg
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+`} value={violencia}
                                         onChange={(e) => setViolencia(e.target.value)}
                                     />
                                 </div>
@@ -418,8 +469,13 @@ export default function ProntuarioForm() {
                                         Delírios / Alucinações:
                                     </label>
                                     <textarea
-                                        className={textareaClass}
-                                        value={delirios}
+                                        className={`
+  ${inputClass}
+  w-full pr-9
+  border border-gray-200 rounded-lg
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+`} value={delirios}
                                         onChange={(e) => setDelirios(e.target.value)}
                                     />
                                 </div>
@@ -429,8 +485,13 @@ export default function ProntuarioForm() {
                                         Atividade Física:
                                     </label>
                                     <textarea
-                                        className={textareaClass}
-                                        value={atividadeFisica}
+                                        className={`
+  ${inputClass}
+  w-full pr-9
+  border border-gray-200 rounded-lg
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+`} value={atividadeFisica}
                                         onChange={(e) => setAtividadeFisica(e.target.value)}
                                     />
                                 </div>
@@ -440,8 +501,13 @@ export default function ProntuarioForm() {
                                         Hobbies:
                                     </label>
                                     <textarea
-                                        className={textareaClass}
-                                        value={hobbies}
+                                        className={`
+  ${inputClass}
+  w-full pr-9
+  border border-gray-200 rounded-lg
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+`} value={hobbies}
                                         onChange={(e) => setHobbies(e.target.value)}
                                     />
                                 </div>
@@ -451,8 +517,13 @@ export default function ProntuarioForm() {
                                         Manias / TOC:
                                     </label>
                                     <textarea
-                                        className={textareaClass}
-                                        value={manias}
+                                        className={`
+  ${inputClass}
+  w-full pr-9
+  border border-gray-200 rounded-lg
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+`} value={manias}
                                         onChange={(e) => setManias(e.target.value)}
                                     />
                                 </div>
@@ -462,8 +533,13 @@ export default function ProntuarioForm() {
                                         Pensamentos Intrusivos:
                                     </label>
                                     <textarea
-                                        className={textareaClass}
-                                        value={pensamentos}
+                                        className={`
+  ${inputClass}
+  w-full pr-9
+  border border-gray-200 rounded-lg
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+`} value={pensamentos}
                                         onChange={(e) => setPensamentos(e.target.value)}
                                     />
                                 </div>
@@ -473,8 +549,13 @@ export default function ProntuarioForm() {
                                         Vícios:
                                     </label>
                                     <textarea
-                                        className={textareaClass}
-                                        value={vicios}
+                                        className={`
+  ${inputClass}
+  w-full pr-9
+  border border-gray-200 rounded-lg
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+`} value={vicios}
                                         onChange={(e) => setVicios(e.target.value)}
                                     />
                                 </div>
@@ -484,8 +565,13 @@ export default function ProntuarioForm() {
                                         Sintomas:
                                     </label>
                                     <textarea
-                                        className={textareaClass}
-                                        value={sintomas}
+                                        className={`
+  ${inputClass}
+  w-full pr-9
+  border border-gray-200 rounded-lg
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+`} value={sintomas}
                                         onChange={(e) => setSintomas(e.target.value)}
                                     />
                                 </div>
@@ -495,8 +581,13 @@ export default function ProntuarioForm() {
                                         Plano Terapêutico:
                                     </label>
                                     <textarea
-                                        className={`${textareaClass} h-32`}
-                                        value={plano}
+                                        className={`
+  ${inputClass}
+  w-full pr-9
+  border border-gray-200 rounded-lg
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+`} value={plano}
                                         onChange={(e) => setPlano(e.target.value)}
                                     />
                                 </div>
@@ -506,8 +597,13 @@ export default function ProntuarioForm() {
                                         Estado Atual:
                                     </label>
                                     <textarea
-                                        className={`${textareaClass} h-32`}
-                                        value={estadoAtual}
+                                        className={`
+  ${inputClass}
+  w-full pr-9
+  border border-gray-200 rounded-lg
+  focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
+  text-sm bg-white transition-all duration-200
+`} value={estadoAtual}
                                         onChange={(e) => setEstadoAtual(e.target.value)}
                                     />
                                 </div>
