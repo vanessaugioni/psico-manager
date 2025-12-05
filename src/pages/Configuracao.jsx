@@ -192,7 +192,7 @@ className={`
 
           </div>
 
-          <p className={sectionTitle + " pt-4"}>Login</p>
+          <p className={sectionTitle + " pt-4"}>Dados de Login</p>
           <hr className="border-gray-300" />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -226,7 +226,7 @@ className={`
             </div>
           </div>
 
-          <p className={sectionTitle + " pt-4"}>Preferências</p>
+          {/* <p className={sectionTitle + " pt-4"}>Preferências</p>
           <hr className="border-gray-300" />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -259,7 +259,7 @@ className={`
               />
               Enviar lembrete 1 hora antes
             </label>
-          </div>
+          </div> */}
         </section>
       </main>
     </div>

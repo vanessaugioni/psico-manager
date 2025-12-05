@@ -21,14 +21,43 @@ export default function Sidebar() {
   const [usuario, setUsuario] = useState("");
   const [atuacao, setAtuacao] = useState("");
 
-
   const menuItems = [
-    { name: "Dashboard", icon: <LayoutDashboard size={18} />, path: "/dashboard" },
-    { name: "Pacientes", icon: <Users size={18} />, path: "/pacientes" },
-    { name: "Prontuários", icon: <FileText size={18} />, path: "/prontuarios" },
-    { name: "Consultas", icon: <Calendar size={18} />, path: "/consultas" },
-    { name: "Configurações", icon: <Settings size={18} />, path: "/configuracoes" },
-  ];
+  { 
+    name: "Dashboard", 
+    icon: <LayoutDashboard size={18} />, 
+    path: "/dashboard",
+    includes: ["/dashboard"]
+  },
+
+  { 
+    name: "Pacientes", 
+    icon: <Users size={18} />, 
+    path: "/pacientes",
+    includes: ["/pacientes", "/paciente", "/pacienteForm"]
+  },
+
+  { 
+    name: "Prontuários", 
+    icon: <FileText size={18} />, 
+    path: "/prontuarios",
+    includes: ["/prontuarios", "/prontuario"]
+  },
+
+  { 
+    name: "Consultas", 
+    icon: <Calendar size={18} />, 
+    path: "/consultas",
+    includes: ["/consultas", "/consulta"]
+  },
+
+  { 
+    name: "Configurações", 
+    icon: <Settings size={18} />, 
+    path: "/configuracoes",
+    includes: ["/configuracoes"]
+  },
+];
+
 
   useEffect(() => {
     carregarUsuario();
@@ -56,11 +85,11 @@ export default function Sidebar() {
     >
       <div>
         <div
-          className={`flex items-center justify-between px-4 py-5 border-b border-gray-100 ${
-            !isOpen ? "flex-col gap-3 justify-center" : ""
+          className={`flex items-center justify-start px-4 py-5 border-b border-gray-100 ${
+            !isOpen ? "flex-col gap-3 items-start" : ""
           }`}
         >
-          <div className="flex items-center gap-3 justify-start w-full">
+          <div className="flex items-start gap-3 justify-start w-full">
             <img
               src={userPhoto}
               alt="Usuário"
@@ -73,7 +102,7 @@ export default function Sidebar() {
                   {nome || "Carregando..."}
                 </h2>
                 <span className="text-xs text-gray-500">
-                  { atuacao || "Atuação"}
+                  {atuacao || "Atuação"}
                 </span>
               </div>
             )}
@@ -93,7 +122,8 @@ export default function Sidebar() {
 
         <nav className="flex flex-col gap-1 mt-4 px-2">
           {menuItems.map((item) => {
-            const isActive = location.pathname === item.path;
+            const isActive = item.includes.some(p => location.pathname.startsWith(p));
+
             return (
               <Link
                 key={item.name}
@@ -112,7 +142,6 @@ export default function Sidebar() {
         </nav>
       </div>
 
-      {/* Rodapé */}
       <div className="p-4 border-t border-gray-100">
         <Link
           to="/login"

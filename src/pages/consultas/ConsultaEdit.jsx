@@ -91,7 +91,7 @@ export default function ConsultaEdit() {
     setTimeout(() => navigate("/consultas"), 1200);
   };
 
-  // SALVAR ALTERAÇÕES
+
   const handleSave = async (e) => {
     e.preventDefault();
 
@@ -136,7 +136,6 @@ export default function ConsultaEdit() {
 
   const handleCancel = () => navigate("/consultas");
 
-  // MODAL
   const DeleteModal = () => (
     <div className="fixed inset-0 bg-black/60 bg-opacity-40 flex items-center justify-center z-[999]">
       <div className="bg-white p-6 rounded-xl shadow-lg w-80 text-center">
@@ -214,13 +213,13 @@ export default function ConsultaEdit() {
 
             {/* PACIENTE */}
             <div className="flex flex-col">
-              <label className="text-sm text-gray-700 mb-1">Paciente</label>
+              <label className="text-sm font-medium text-gray-700 mb-1">Paciente: *</label>
               <select
                 className={`${inputClass} h-12 ${errors.paciente ? "border-red-500" : "border-gray-200"}`}
                 value={pacienteId}
                 onChange={(e) => setPacienteId(e.target.value)}
               >
-                <option value="">Selecione o Paciente</option>
+                <option value=""></option>
                 {pacientes.map((p) => (
                   <option key={p.id_paciente} value={p.id_paciente}>
                     {p.nome}
@@ -231,7 +230,7 @@ export default function ConsultaEdit() {
 
             {/* DATA */}
             <div className="flex flex-col">
-              <label className="text-sm text-gray-700 mb-1">Data da Consulta</label>
+              <label className="text-sm font-medium text-gray-700 mb-1">Data: * </label>
               <input
                 type="date"
                 className={`${inputClass} h-12 ${errors.dataConsulta ? "border-red-500" : "border-gray-200"}`}
@@ -242,7 +241,7 @@ export default function ConsultaEdit() {
 
             {/* HORA */}
             <div className="flex flex-col">
-              <label className="text-sm text-gray-700 mb-1">Hora da Consulta</label>
+              <label className="text-sm font-medium text-gray-700 mb-1">Hora Inicial: *</label>
               <input
                 type="time"
                 className={`${inputClass} h-12 ${errors.horaConsulta ? "border-red-500" : "border-gray-200"}`}
@@ -253,7 +252,7 @@ export default function ConsultaEdit() {
 
             {/* DURAÇÃO */}
             <div className="flex flex-col">
-              <label className="text-sm text-gray-700 mb-1">Duração</label>
+              <label className="text-sm font-medium text-gray-700 mb-1">Duração: *</label>
               <input
                 type="time"
                 className={`${inputClass} h-12 ${errors.duracao ? "border-red-500" : "border-gray-200"}`}
@@ -264,7 +263,7 @@ export default function ConsultaEdit() {
 
             {/* TIPO */}
             <div className="flex flex-col">
-              <label className="text-sm text-gray-700 mb-1">Tipo</label>
+              <label className="text-sm font-medium text-gray-700 mb-1">Tipo: *</label>
               <select
                 className={`
     ${inputClass}
@@ -275,7 +274,7 @@ export default function ConsultaEdit() {
   `} value={tipo}
                 onChange={(e) => setTipo(e.target.value)}
               >
-                <option value="">Selecione o Tipo</option>
+                <option value=""></option>
                 <option value="presencial">Presencial</option>
                 <option value="online">Online</option>
               </select>
@@ -292,7 +291,7 @@ export default function ConsultaEdit() {
 
             {/* DESCRIÇÃO */}
             <div className="flex flex-col">
-              <label className="text-sm text-gray-700 mb-1">Descrição</label>
+              <label className="text-sm font-medium text-gray-700 mb-1">Descrição: </label>
               <textarea
                 className={`
   ${inputClass}
@@ -300,7 +299,7 @@ export default function ConsultaEdit() {
   border border-gray-200 rounded-lg
   focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
   text-sm bg-white transition-all duration-200
-`} placeholder="Descrição"
+`}
                 value={descricao}
                 onChange={(e) => setDescricao(e.target.value)}
               />
@@ -308,7 +307,7 @@ export default function ConsultaEdit() {
 
             {/* ORIENTAÇÃO */}
             <div className="flex flex-col">
-              <label className="text-sm text-gray-700 mb-1">Orientação / Conduta</label>
+              <label className="text-sm font-medium text-gray-700 mb-1">Orientação / Conduta: </label>
               <textarea
                 className={`
   ${inputClass}
@@ -316,7 +315,7 @@ export default function ConsultaEdit() {
   border border-gray-200 rounded-lg
   focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
   text-sm bg-white transition-all duration-200
-`} placeholder="Orientação / Conduta"
+`}
                 value={orientacao}
                 onChange={(e) => setOrientacao(e.target.value)}
               />

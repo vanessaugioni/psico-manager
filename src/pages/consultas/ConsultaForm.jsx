@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Sidebar from "../../components/Sidebar";
 import { supabase } from "../../lib/supabaseClient";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
+
 
 export default function ConsultaForm() {
     const navigate = useNavigate();
@@ -109,6 +111,18 @@ export default function ConsultaForm() {
 
     const handleCancel = () => navigate("/consultas");
 
+    const location = useLocation();
+
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const dataURL = params.get("data");
+
+        if (dataURL) {
+            setDataConsulta(dataURL);
+        }
+    }, [location.search]);
+
+
     return (
         <div className="flex min-h-screen bg-[#f6f6f6]">
             <ToastContainer />
@@ -148,31 +162,39 @@ export default function ConsultaForm() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
 
                         <div className="flex flex-col">
+                             <div className="flex flex-col">
+              <label className="text-sm font-medium text-gray-700 mb-1">
+                Paciente: *
+              </label>
                             <select
                                 className={`${inputClass} w-full h-12 py-2 appearance-none ${errors.paciente ? "border-red-500" : "border-gray-200"}`}
                                 value={pacienteId}
                                 onChange={(e) => setPacienteId(e.target.value)}
                             >
-                                <option value="">Selecione o Paciente</option>
+                                <option value=""></option>
                                 {pacientes.map((p) => (
                                     <option key={p.id_paciente} value={p.id_paciente}>
                                         {p.nome}
                                     </option>
                                 ))}
-                            </select>
+                            </select></div>
                         </div>
 
                         <div className="flex flex-col">
+                             <div className="flex flex-col">
+              <label className="text-sm font-medium text-gray-700 mb-1">
+                Data: *
+              </label>
                             <input
                                 type="date"
                                 className={`${inputClass} ${errors.dataConsulta ? "border-red-500" : "border-gray-200"} h-12`}
                                 value={dataConsulta}
                                 onChange={(e) => setDataConsulta(e.target.value)}
-                            />
+                            /></div>
                         </div>
 
                         <div className="flex flex-col">
-                            <label className="text-sm text-gray-700 mb-1">Hora da Consulta: *</label>
+                            <label className="text-sm font-medium text-gray-700 mb-1">Hora de Início: *</label>
                             <input
                                 type="time"
                                 className={`${inputClass} ${errors.horaConsulta ? "border-red-500" : "border-gray-200"} h-12`}
@@ -182,7 +204,7 @@ export default function ConsultaForm() {
                         </div>
 
                         <div className="flex flex-col">
-                            <label className="text-sm text-gray-700 mb-1">Duração (HH:mm): *</label>
+                            <label className="text-sm font-medium text-gray-700 mb-1">Duração (HH:mm): *</label>
                             <input
                                 type="time"
                                 className={`${inputClass} ${errors.duracao ? "border-red-500" : "border-gray-200"} h-12`}
@@ -192,7 +214,10 @@ export default function ConsultaForm() {
                         </div>
 
                         <div className="flex flex-col">
-
+ <div className="flex flex-col">
+              <label className="text-sm font-medium text-gray-700 mb-1">
+                Tipo:
+              </label>
                             <select
                                 className={`
     ${inputClass}
@@ -207,7 +232,7 @@ export default function ConsultaForm() {
                                 <option value="">Selecione o Tipo</option>
                                 <option value="presencial">Presencial</option>
                                 <option value="online">Online</option>
-                            </select>
+                            </select></div>
                         </div>
                     </div>
                 </div>
@@ -218,7 +243,7 @@ export default function ConsultaForm() {
 
                     <div className="grid grid-cols-1 gap-4 mt-4">
                         <div className="flex flex-col">
-                            <label className="text-sm text-gray-700 mb-1">Descrição</label>
+                            <label className="text-sm font-medium text-gray-700 mb-1">Descrição: </label>
                             <textarea
                                 className={`
   ${inputClass}
@@ -232,7 +257,7 @@ export default function ConsultaForm() {
                         </div>
 
                         <div className="flex flex-col">
-                            <label className="text-sm text-gray-700 mb-1">Orientação / Conduta</label>
+                            <label className="text-sm font-medium text-gray-700 mb-1">Orientação / Conduta: </label>
                             <textarea
                                 className={`
   ${inputClass}

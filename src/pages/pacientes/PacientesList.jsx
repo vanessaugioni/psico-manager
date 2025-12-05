@@ -105,7 +105,7 @@ export default function PacienteList() {
           </div>
 
           <button
-            onClick={() => navigate("/pacienteForm")}
+            onClick={() => navigate("/paciente/novo")}
             className="
   h-10 px-5
   flex items-center justify-center gap-2

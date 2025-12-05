@@ -3,9 +3,7 @@ import LandingPage from "../pages/LandingPage";
 import Login from "../pages/Login";
 import Dashboard from "../pages/Dashboard";
 import Pacientes from "../pages/pacientes/PacientesList";
-import PacienteEdit from "../pages/pacientes/PacienteEdit"; // <- aqui
-import NotFound from "../pages/NotFound";
-import PrivateRoute from "../components/PrivateRoute";
+import PacienteEdit from "../pages/pacientes/PacienteEdit";
 import PacienteForm from "../pages/pacientes/PacienteForm";
 import ProntuariosList from "../pages/prontuarios/ProntuariosList";
 import ProntuarioForm from "../pages/prontuarios/ProntuarioForm";
@@ -14,14 +12,18 @@ import ConsultasList from "../pages/consultas/ConsultasList";
 import ConsultaForm from "../pages/consultas/ConsultaForm";
 import ConsultaEdit from "../pages/consultas/ConsultaEdit";
 import ConfiguracaoEdit from "../pages/Configuracao";
+import NotFound from "../pages/NotFound";
+import PrivateRoute from "../components/PrivateRoute";
 
 export default function AppRoutes() {
   return (
     <BrowserRouter>
       <Routes>
+        
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
 
+        {/* DASHBOARD */}
         <Route
           path="/dashboard"
           element={
@@ -31,6 +33,7 @@ export default function AppRoutes() {
           }
         />
 
+        {/* PACIENTES */}
         <Route
           path="/pacientes"
           element={
@@ -40,10 +43,17 @@ export default function AppRoutes() {
           }
         />
 
-        <Route path="/paciente/edit/:id" element={<PacienteEdit />} />
+        <Route
+          path="/paciente/edit/:id"
+          element={
+            <PrivateRoute>
+              <PacienteEdit />
+            </PrivateRoute>
+          }
+        />
 
         <Route
-          path="/pacienteForm"
+          path="/paciente/novo"
           element={
             <PrivateRoute>
               <PacienteForm />
@@ -51,6 +61,7 @@ export default function AppRoutes() {
           }
         />
 
+        {/* PRONTUÁRIOS */}
         <Route
           path="/prontuarios"
           element={
@@ -61,7 +72,7 @@ export default function AppRoutes() {
         />
 
         <Route
-          path="/prontuarioForm"
+          path="/prontuario/novo"
           element={
             <PrivateRoute>
               <ProntuarioForm />
@@ -69,8 +80,16 @@ export default function AppRoutes() {
           }
         />
 
-        <Route path="/prontuario/edit/:id" element={<ProntuarioEdit />} />
+        <Route
+          path="/prontuario/edit/:id"
+          element={
+            <PrivateRoute>
+              <ProntuarioEdit />
+            </PrivateRoute>
+          }
+        />
 
+        {/* CONSULTAS */}
         <Route
           path="/consultas"
           element={
@@ -80,10 +99,17 @@ export default function AppRoutes() {
           }
         />
 
-        <Route path="/consulta/edit/:id" element={<ConsultaEdit />} />
+        <Route
+          path="/consultas/edit/:id"
+          element={
+            <PrivateRoute>
+              <ConsultaEdit />
+            </PrivateRoute>
+          }
+        />
 
         <Route
-          path="/consultaForm"
+          path="/consultas/nova"
           element={
             <PrivateRoute>
               <ConsultaForm />
@@ -91,7 +117,8 @@ export default function AppRoutes() {
           }
         />
 
-             <Route
+        {/* CONFIGURAÇÕES */}
+        <Route
           path="/configuracoes"
           element={
             <PrivateRoute>
@@ -100,7 +127,7 @@ export default function AppRoutes() {
           }
         />
 
-
+        {/* 404 */}
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

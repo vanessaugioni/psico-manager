@@ -14,6 +14,7 @@ import {
   Cell,
 } from "recharts";
 import { supabase } from "../lib/supabaseClient";
+import { HelpCircle } from "lucide-react";
 
 export default function Dashboard() {
   const [pacientesCount, setPacientesCount] = useState(0);
@@ -121,9 +122,9 @@ export default function Dashboard() {
 
   return (
     <div className="flex min-h-screen bg-[#f8f8f8]">
-     <aside className="w-20 sm:w-64 h-screen sticky top-0 border-r border-gray-200 bg-white z-40 shadow-sm">
-  <Sidebar />
-</aside>
+      <aside className="w-20 sm:w-64 h-screen sticky top-0 border-r border-gray-200 bg-white z-40 shadow-sm">
+        <Sidebar />
+      </aside>
 
 
       <div className="flex-1 p-8">
@@ -135,35 +136,68 @@ export default function Dashboard() {
         </header>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white rounded-2xl shadow-md p-6 border border-gray-200 flex items-center gap-4">
+          <div className="bg-white rounded-2xl shadow-md p-6 border border-gray-200 flex items-center gap-4 relative">
             <div className="p-3 bg-[#9F6C4D] text-white rounded-xl">
               <User size={28} />
             </div>
             <div>
-              <p className="text-sm text-gray-500">Pacientes cadastrados</p>
+              <p className="text-sm text-gray-500 flex items-center gap-2">
+                Pacientes cadastrados
+
+                <div className="relative group cursor-pointer">
+                  <HelpCircle size={16} className="text-gray-400" />
+                  <div className="absolute left-6 top-1 hidden group-hover:block bg-black text-white text-xs p-2 rounded shadow-lg w-48 z-50">
+                    Contabiliza todos os pacientes com cadastro no sistema.
+                  </div>
+                </div>
+              </p>
+
               <p className="text-2xl font-bold">{pacientesCount}</p>
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-md p-6 border border-gray-200 flex items-center gap-4">
+
+          <div className="bg-white rounded-2xl shadow-md p-6 border border-gray-200 flex items-center gap-4 relative">
             <div className="p-3 bg-[#9F6C4D] text-white rounded-xl">
               <FileText size={28} />
             </div>
             <div>
-              <p className="text-sm text-gray-500">Quantidade de prontuários</p>
+              <p className="text-sm text-gray-500 flex items-center gap-2">
+                Quantidade de prontuários
+
+                <div className="relative group cursor-pointer">
+                  <HelpCircle size={16} className="text-gray-400" />
+                  <div className="absolute left-6 top-1 hidden group-hover:block bg-black text-white text-xs p-2 rounded shadow-lg w-48 z-50">
+                    Conta todos os prontuários registrados para todos os pacientes.
+                  </div>
+                </div>
+              </p>
+
               <p className="text-2xl font-bold">{prontuariosCount}</p>
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl shadow-md p-6 border border-gray-200 flex items-center gap-4">
+
+          <div className="bg-white rounded-2xl shadow-md p-6 border border-gray-200 flex items-center gap-4 relative">
             <div className="p-3 bg-[#9F6C4D] text-white rounded-xl">
               <Calendar size={28} />
             </div>
             <div>
-              <p className="text-sm text-gray-500">Consultas agendadas</p>
+              <p className="text-sm text-gray-500 flex items-center gap-2">
+                Consultas agendadas
+
+                <div className="relative group cursor-pointer">
+                  <HelpCircle size={16} className="text-gray-400" />
+                  <div className="absolute left-6 top-1 hidden group-hover:block bg-black text-white text-xs p-2 rounded shadow-lg w-48 z-50">
+                    Número de consultas agendadas a partir da data atual.
+                  </div>
+                </div>
+              </p>
+
               <p className="text-2xl font-bold">{consultasAgendadasCount}</p>
             </div>
           </div>
+
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

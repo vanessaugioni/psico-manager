@@ -54,9 +54,9 @@ export default function ProntuariosList() {
 
     return (
         <div className="flex min-h-screen bg-[#f8f8f8]">
-            <aside className="w-20 sm:w-64 h-screen sticky top-0 border-r border-gray-200 bg-white z-40 shadow-sm">
-                <Sidebar />
-            </aside>
+          <aside className="w-20 sm:w-64 h-screen sticky top-0">
+                 <Sidebar />
+               </aside>
             <main className="flex-1 p-8">
                 <header className="mb-8">
                     <h1 className="text-3xl font-bold text-gray-800 mb-1">Prontuários</h1>

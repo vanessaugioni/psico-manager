@@ -307,8 +307,12 @@ export default function PacienteForm() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
 
-              <input
-                className={`
+              <div className="flex flex-col">
+                <label className="text-sm font-medium text-gray-700 mb-1">
+                  Nome Completo: *
+                </label>
+                <input
+                  className={`
   w-full pr-9 h-10
   border rounded-lg 
   focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
@@ -316,14 +320,18 @@ export default function PacienteForm() {
   ${inputClass}
   ${errors.fullName ? "border-red-500" : "border-gray-200"}
 `}
-                placeholder="Nome Completo *"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
 
-              />
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
 
-              <input
-                className={`
+                />
+              </div>
+              <div className="flex flex-col">
+                <label className="text-sm font-medium text-gray-700 mb-1">
+                  Nome Social: *
+                </label>
+                <input
+                  className={`
   ${inputClass}
   w-full pr-9 h-10 
   border border-gray-200 rounded-lg
@@ -331,13 +339,18 @@ export default function PacienteForm() {
   text-sm bg-white transition-all duration-200
 `}
 
-                placeholder="Nome Social"
-                value={socialName}
-                onChange={(e) => setSocialName(e.target.value)}
-              />
 
-              <IMaskInput
-                className={`
+                  value={socialName}
+                  onChange={(e) => setSocialName(e.target.value)}
+                />
+              </div>
+
+              <div className="flex flex-col">
+                <label className="text-sm font-medium text-gray-700 mb-1">
+                  CPF: *
+                </label>
+                <IMaskInput
+                  className={`
   w-full pr-9 h-10
   border rounded-lg 
   focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
@@ -345,15 +358,19 @@ export default function PacienteForm() {
   ${inputClass}
   ${errors.fullName ? "border-red-500" : "border-gray-200"}
 `}
-                placeholder="CPF *"
-                mask="000.000.000-00"
-                value={cpf}
-                onAccept={(v) => setCpf(v)}
-              />
+                  mask="000.000.000-00"
+                  value={cpf}
+                  onAccept={(v) => setCpf(v)}
+                />
+              </div>
 
-              <input
-                type="date"
-                className={`
+              <div className="flex flex-col">
+                <label className="text-sm font-medium text-gray-700 mb-1">
+                  Data Nascimento: *
+                </label>
+                <input
+                  type="date"
+                  className={`
   w-full pr-9 h-10
   border rounded-lg 
   focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
@@ -361,83 +378,100 @@ export default function PacienteForm() {
   ${inputClass}
   ${errors.fullName ? "border-red-500" : "border-gray-200"}
 `} value={birthDate}
-                onChange={(e) => {
-                  setBirthDate(e.target.value);
-                  setAge(calcularIdade(e.target.value));
-                }}
-              />
+                  onChange={(e) => {
+                    setBirthDate(e.target.value);
+                    setAge(calcularIdade(e.target.value));
+                  }}
+                /> </div>
 
-              <input
-                disabled
-                className={`
+              <div className="flex flex-col">
+                <label className="text-sm font-medium text-gray-700 mb-1">
+                  Idade:
+                </label>
+                <input
+                  disabled
+                  className={`
   ${inputClass}
   w-full pr-9 h-10 
   border border-gray-200 rounded-lg
   focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
   text-sm transition-all duration-200 bg-gray-100
 `}
-                value={age ?? ""}
-                placeholder="Idade (automático)"
-              />
+                  value={age ?? ""}
 
-              <select
-                className={`
+                /></div>
+
+              <div className="flex flex-col">
+                <label className="text-sm font-medium text-gray-700 mb-1">
+                  Gênero: *
+                </label>
+                <select
+                  className={`
     ${inputClass}
     w-full h-10 py-2
     border border-gray-200 rounded-lg
     focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
     text-sm bg-white transition-all duration-200 appearance-none
   `}
-                value={gender}
-                onChange={(e) => setGender(e.target.value)}
-              >
+                  value={gender}
+                  onChange={(e) => setGender(e.target.value)}
+                >
 
 
-                <option value="">Selecione o Gênero</option>
-                {generoOptions.map((g) => (
-                  <option key={g.id_genero} value={g.id_genero}>
-                    {g.descricao}
-                  </option>
-                ))}
-              </select>
+                  <option value="">  </option>
+                  {generoOptions.map((g) => (
+                    <option key={g.id_genero} value={g.id_genero}>
+                      {g.descricao}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-              <select
-                className={`
+              <div className="flex flex-col">
+                <label className="text-sm font-medium text-gray-700 mb-1">
+                  Orientação Sexual:
+                </label>
+                <select
+                  className={`
     ${inputClass}
     w-full h-10 py-2
     border border-gray-200 rounded-lg
     focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
     text-sm bg-white transition-all duration-200 appearance-none
   `}
-                value={sexualOrientation}
-                onChange={(e) => setSexualOrientation(e.target.value)}
-              >
-                <option value=""> Selecione a Orientação</option>
-                {orientacaoOptions.map((o) => (
-                  <option key={o.id_orientacao} value={o.id_orientacao}>
-                    {o.descricao}
-                  </option>
-                ))}
-              </select>
+                  value={sexualOrientation}
+                  onChange={(e) => setSexualOrientation(e.target.value)}
+                >
+                  <option value=""> </option>
+                  {orientacaoOptions.map((o) => (
+                    <option key={o.id_orientacao} value={o.id_orientacao}>
+                      {o.descricao}
+                    </option>
+                  ))}
+                </select></div>
 
-              <select
-                className={`
+              <div className="flex flex-col">
+                <label className="text-sm font-medium text-gray-700 mb-1">
+                  Estado Civil:
+                </label>
+                <select
+                  className={`
     ${inputClass}
     w-full h-10 py-2
     border border-gray-200 rounded-lg
     focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
     text-sm bg-white transition-all duration-200 appearance-none
   `}
-                value={maritalStatus}
-                onChange={(e) => setMaritalStatus(e.target.value)}
-              >
-                <option value="">Selecione Estado Civil</option>
-                {estadoCivilOptions.map((e) => (
-                  <option key={e.id_estado_civil} value={e.id_estado_civil}>
-                    {e.descricao}
-                  </option>
-                ))}
-              </select>
+                  value={maritalStatus}
+                  onChange={(e) => setMaritalStatus(e.target.value)}
+                >
+                  <option value=""></option>
+                  {estadoCivilOptions.map((e) => (
+                    <option key={e.id_estado_civil} value={e.id_estado_civil}>
+                      {e.descricao}
+                    </option>
+                  ))}
+                </select></div>
 
             </div>
           </div>
@@ -449,73 +483,87 @@ export default function PacienteForm() {
           <hr className="border-gray-300" />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-
-            <input
-              className={`
+            <div className="flex flex-col">
+              <label className="text-sm font-medium text-gray-700 mb-1">
+                Profissão:
+              </label>
+              <input
+                className={`
   ${inputClass}
   w-full pr-9 h-10 
   border border-gray-200 rounded-lg
   focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
   text-sm bg-white transition-all duration-200
 `}
-              placeholder="Profissão"
-              value={profession}
-              onChange={(e) => setProfession(e.target.value)}
-            />
 
-            <select
-              className={`
+                value={profession}
+                onChange={(e) => setProfession(e.target.value)}
+              /> </div>
+
+            <div className="flex flex-col">
+              <label className="text-sm font-medium text-gray-700 mb-1">
+                Religião:
+              </label>
+              <select
+                className={`
     ${inputClass}
     w-full h-10 py-2
     border border-gray-200 rounded-lg
     focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
     text-sm bg-white transition-all duration-200 appearance-none
   `}
-              value={religion}
-              onChange={(e) => setReligion(e.target.value)}
-            >
-              <option value="">Selecione Religião</option>
-              {religiaoOptions.map((r) => (
-                <option key={r.id_religiao} value={r.id_religiao}>
-                  {r.descricao}
-                </option>
-              ))}
-            </select>
+                value={religion}
+                onChange={(e) => setReligion(e.target.value)}
+              >
+                <option value=""></option>
+                {religiaoOptions.map((r) => (
+                  <option key={r.id_religiao} value={r.id_religiao}>
+                    {r.descricao}
+                  </option>
+                ))}
+              </select></div>
 
-            <select
-              className={`
+            <div className="flex flex-col">
+              <label className="text-sm font-medium text-gray-700 mb-1">
+                Escolaridade:
+              </label>
+              <select
+                className={`
     ${inputClass}
     w-full h-10 py-2
     border border-gray-200 rounded-lg
     focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
     text-sm bg-white transition-all duration-200 appearance-none
   `}
-              value={education}
-              onChange={(e) => setEducation(e.target.value)}
-            >
-              <option value="">Selecione Escolaridade</option>
-              {escolaridadeOptions.map((e) => (
-                <option key={e.id_escolaridade} value={e.id_escolaridade}>
-                  {e.descricao}
-                </option>
-              ))}
-            </select>
+                value={education}
+                onChange={(e) => setEducation(e.target.value)}
+              >
+                <option value=""></option>
+                {escolaridadeOptions.map((e) => (
+                  <option key={e.id_escolaridade} value={e.id_escolaridade}>
+                    {e.descricao}
+                  </option>
+                ))}
+              </select></div>
 
           </div>
 
-          <textarea
-            className={`
+          <div className="flex flex-col">
+            <label className="text-sm font-medium text-gray-700 mb-1">
+              Composição Familiar:
+            </label>
+            <textarea
+              className={`
   ${inputClass}
   w-full pr-9
   border border-gray-200 rounded-lg
   focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
   text-sm bg-white transition-all duration-200
 `}
-            placeholder="Composição Familiar"
-            value={familyComposition}
-            onChange={(e) => setFamilyComposition(e.target.value)}
-          />
-        </div>
+              value={familyComposition}
+              onChange={(e) => setFamilyComposition(e.target.value)}
+            />
+          </div></div>
 
 
         <div className={blockClass}>
@@ -524,47 +572,56 @@ export default function PacienteForm() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
-            <input
-              className={`
+            <div className="flex flex-col">
+              <label className="text-sm font-medium text-gray-700 mb-1">
+                Medicação:
+              </label>
+              <input
+                className={`
   ${inputClass}
   w-full pr-9 h-10 
   border border-gray-200 rounded-lg
   focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
   text-sm bg-white transition-all duration-200
 `}
-              placeholder="Medicação"
-              value={medication}
-              onChange={(e) => setMedication(e.target.value)}
-            />
+                value={medication}
+                onChange={(e) => setMedication(e.target.value)}
+              /></div>
 
-            <input
-              className={`
+            <div className="flex flex-col">
+              <label className="text-sm font-medium text-gray-700 mb-1">
+                Doenças:
+              </label>
+              <input
+                className={`
   ${inputClass}
   w-full pr-9 h-10 
   border border-gray-200 rounded-lg
   focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
   text-sm bg-white transition-all duration-200
 `}
-              placeholder="Doenças"
-              value={diseases}
-              onChange={(e) => setDiseases(e.target.value)}
-            />
+                value={diseases}
+                onChange={(e) => setDiseases(e.target.value)}
+              />
 
-          </div>
+            </div></div>
 
-          <textarea
-            className={`
+          <div className="flex flex-col">
+            <label className="text-sm font-medium text-gray-700 mb-1">
+              Observações:
+            </label>
+            <textarea
+              className={`
   ${inputClass}
   w-full pr-9 
   border border-gray-200 rounded-lg
   focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
   text-sm bg-white transition-all duration-200
 `}
-            placeholder="Observações"
-            value={observation}
-            onChange={(e) => setObservation(e.target.value)}
-          />
-        </div>
+              value={observation}
+              onChange={(e) => setObservation(e.target.value)}
+            />
+          </div></div>
 
 
         <div className={blockClass}>
@@ -573,53 +630,65 @@ export default function PacienteForm() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 
-            <input
-              className={`
+            <div className="flex flex-col">
+              <label className="text-sm font-medium text-gray-700 mb-1">
+                Endereço:
+              </label>
+              <input
+                className={`
   ${inputClass}
   w-full pr-9 h-10 
   border border-gray-200 rounded-lg
   focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
   text-sm bg-white transition-all duration-200
 `}
-              placeholder="Endereço"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-            />
 
-            <input
-              className={`
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+              /></div>
+            <div className="flex flex-col">
+              <label className="text-sm font-medium text-gray-700 mb-1">
+                Número:
+              </label>
+              <input
+                className={`
   ${inputClass}
   w-full pr-9 h-10 
   border border-gray-200 rounded-lg
   focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
   text-sm bg-white transition-all duration-200
 `}
-              placeholder="Número"
-              value={number}
-              onChange={(e) => setNumber(e.target.value)}
-            />
 
-            <select
-              className={`
+                value={number}
+                onChange={(e) => setNumber(e.target.value)}
+              /></div>
+            <div className="flex flex-col">
+              <label className="text-sm font-medium text-gray-700 mb-1">
+                País:
+              </label>
+              <select
+                className={`
     ${inputClass}
     w-full h-10 py-2
     border border-gray-200 rounded-lg
     focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
     text-sm bg-white transition-all duration-200 appearance-none
   `}
-              value={country}
-              onChange={(e) => setCountry(e.target.value)}
-            >
-              <option value="">Selecione o País</option>
-              {paisOptions.map((p) => (
-                <option key={p.id_pais} value={p.id_pais}>
-                  {p.nome}
-                </option>
-              ))}
-            </select>
-
-            <IMaskInput
-              className={`
+                value={country}
+                onChange={(e) => setCountry(e.target.value)}
+              >
+                {paisOptions.map((p) => (
+                  <option key={p.id_pais} value={p.id_pais}>
+                    {p.nome}
+                  </option>
+                ))}
+              </select></div>
+            <div className="flex flex-col">
+              <label className="text-sm font-medium text-gray-700 mb-1">
+                Contato:
+              </label>
+              <IMaskInput
+                className={`
   w-full pr-9 h-10
   border rounded-lg 
   focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
@@ -627,39 +696,44 @@ export default function PacienteForm() {
   ${inputClass}
   ${errors.fullName ? "border-red-500" : "border-gray-200"}
 `}
-              placeholder="Celular *"
-              mask="+55 (00) 00000-0000"
-              value={phone}
-              onAccept={(v) => setPhone(v)}
-            />
+                mask="+55 (00) 00000-0000"
+                value={phone}
+                onAccept={(v) => setPhone(v)}
+              /></div>
 
-            <IMaskInput
-              className={`
+            <div className="flex flex-col">
+              <label className="text-sm font-medium text-gray-700 mb-1">
+                Contato de Emergência:
+              </label>
+              <IMaskInput
+                className={`
   ${inputClass}
   w-full pr-9 h-10 
   border border-gray-200 rounded-lg
   focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
   text-sm bg-white transition-all duration-200
 `}
-              placeholder="Contato de Emergência"
-              mask="+55 (00) 00000-0000"
-              value={emergencyContact}
-              onAccept={(v) => setEmergencyContact(v)}
-            />
+                mask="+55 (00) 00000-0000"
+                value={emergencyContact}
+                onAccept={(v) => setEmergencyContact(v)}
+              /></div>
 
-            <input
-              className={`
+            <div className="flex flex-col">
+              <label className="text-sm font-medium text-gray-700 mb-1">
+                E-mail:
+              </label>
+              <input
+                className={`
   ${inputClass}
   w-full pr-9 h-10 
   border border-gray-200 rounded-lg
   focus:outline-none focus:ring-2 focus:ring-[#9F6C4D]/40
   text-sm bg-white transition-all duration-200
 `}
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              type="email"
-            />
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                type="email"
+              /></div>
 
           </div>
         </div>
